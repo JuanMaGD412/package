@@ -24,10 +24,17 @@ const CaseForm = () => {
     version_testigos: "",
   });
   const [evidencias, setEvidencias] = useState([]);
-
+  const [intervencion, setIntervencion] = useState({
+    id_caso: "",  
+    tipoDecision: "",
+    decisionComite: "",
+    compromisos: "",
+    fechaCompromiso: ""
+  });
   // 🔹 Cada vez que cambie `formData.Id_Caso`, actualizar `descripcion.id_caso`
   useEffect(() => {
     setDescripcion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
+    setIntervencion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
   }, [formData.Id_Caso]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -46,13 +53,22 @@ const CaseForm = () => {
     }));
   };
 
+  const handleIntervencionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setIntervencion((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
   const handleSubmit = async () => {
     console.log("Datos del formulario antes de enviar:", formData);
     console.log("Actores:", actores);
     console.log("Descripción con ID:", descripcion); // ✅ Ahora debe mostrar `id_caso`
     console.log("Evidencias:", evidencias); 
+    console.log("Intervención:", intervencion); 
 
-    const idCasoGenerado = await enviarDatos(formData, actores, descripcion, evidencias);
+    const idCasoGenerado = await enviarDatos(formData, actores, descripcion, evidencias, intervencion);
 
     if (idCasoGenerado) {
       setFormData((prev) => ({ ...prev, Id_Caso: idCasoGenerado }));
@@ -65,7 +81,7 @@ const CaseForm = () => {
       <Actores setActores={setActores} idCaso={formData.Id_Caso} />
       <Descricription onChange={handleDescripcionChange} />
       <Evidencias setEvidencias={setEvidencias} idCaso={formData.Id_Caso} />
-      <Intervention />
+      <Intervention onChange={handleIntervencionChange} />
       <RutaAtencionForm />
 
       <div className="mt-6 flex gap-3">

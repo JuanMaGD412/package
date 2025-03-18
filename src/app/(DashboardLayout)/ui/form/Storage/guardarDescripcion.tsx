@@ -27,7 +27,13 @@ export const guardarDescripcion = async (
 
         return { success: true, message: "Descripción guardada correctamente" };
     } catch (error) {
-        console.error("Error al guardar la descripción:", error.message);
-        return { success: false, message: error.message };
+        if (error instanceof Error) {
+            console.error("Error al guardar la descripción:", error.message);
+            return { success: false, message: error.message };
+        } else {
+            console.error("Error desconocido:", error);
+            return { success: false, message: "Ocurrió un error inesperado" };
+        }
     }
+    
 };

@@ -2,10 +2,11 @@ import { guardarCaso } from "./guardarCaso";
 import { guardarActores } from "./guardarActores";
 import { guardarDescripcion } from "./guardarDescripcion";
 import { guardarEvidencia } from "./guardarEvidencias"; // ✅ Importar la función
+import { guardarIntervencion } from "./guardarIntervencion";
 
-export const enviarDatos = async (formData, actores, descripcion, evidencias) => {
+export const enviarDatos = async (formData, actores, descripcion, evidencias, intervencion) => {
   try {
-    console.log("Datos a enviar:", { formData, actores, descripcion, evidencias });
+    console.log("Datos a enviar:", { formData, actores, descripcion, evidencias, intervencion });
 
     if (!formData || Object.keys(formData).length === 0) {
       alert("El formulario está vacío.");
@@ -63,6 +64,20 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias) =>
     if (!evidenciaResponse.success) {
         alert(`Error al guardar evidencias: ${evidenciaResponse.message}`);
         return null;
+    }
+
+    // 🔹 Guardar Intervención
+    const intervencionResponse = await guardarIntervencion(
+      idCaso,
+      intervencion.tipoDecision,
+      intervencion.decisionComite,
+      intervencion.compromisos,
+      intervencion.fechaCompromiso
+    );
+
+    if (!intervencionResponse.success) {
+      alert(`Error al guardar la intervención: ${intervencionResponse.message}`);
+      return null;
     }
 
     
