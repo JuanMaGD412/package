@@ -1,12 +1,13 @@
 import { guardarCaso } from "./guardarCaso";
 import { guardarActores } from "./guardarActores";
 import { guardarDescripcion } from "./guardarDescripcion";
-import { guardarEvidencia } from "./guardarEvidencias"; // ✅ Importar la función
+import { guardarEvidencia } from "./guardarEvidencias";
 import { guardarIntervencion } from "./guardarIntervencion";
+import { guardarRutaAtencion } from "./guardarRutaAtencion";
 
-export const enviarDatos = async (formData, actores, descripcion, evidencias, intervencion) => {
+export const enviarDatos = async (formData, actores, descripcion, evidencias, intervencion, rutaAtencion) => {
   try {
-    console.log("Datos a enviar:", { formData, actores, descripcion, evidencias, intervencion });
+    console.log("Datos a enviar:", { formData, actores, descripcion, evidencias, intervencion, rutaAtencion });
 
     if (!formData || Object.keys(formData).length === 0) {
       alert("El formulario está vacío.");
@@ -65,6 +66,16 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
         alert(`Error al guardar evidencias: ${evidenciaResponse.message}`);
         return null;
     }
+
+    // ✅ Guardar ruta de atención
+    if (rutaAtencion && rutaAtencion.activa !== null) {
+      const rutaAtencionResponse = await guardarRutaAtencion(idCaso, rutaAtencion);
+      if (!rutaAtencionResponse.success) {
+        alert(`Error al guardar la ruta de atención: ${rutaAtencionResponse.message}`);
+        return null;
+      }
+    }
+
 
     // 🔹 Guardar Intervención
     const intervencionResponse = await guardarIntervencion(

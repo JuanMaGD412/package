@@ -5,7 +5,7 @@ import BasicInformation from "./Components/basicInformation";
 import Actores from "./Components/actores";
 import Descricription from "./Components/description";
 import Evidencias from "./Components/evidencias";
-import RutaAtencionForm from "./Components/rutadeatencion";
+import RutaAtencionForm from "./Components/rutaAtencion";
 import Intervention from "./Components/intervention";
 import { enviarDatos } from "./Storage/enviarDatos";
 
@@ -31,6 +31,7 @@ const CaseForm = () => {
     compromisos: "",
     fechaCompromiso: ""
   });
+  const [rutaAtencion, setRuta_Atencion] = useState([]);
   // 🔹 Cada vez que cambie `formData.Id_Caso`, actualizar `descripcion.id_caso`
   useEffect(() => {
     setDescripcion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
@@ -66,9 +67,10 @@ const CaseForm = () => {
     console.log("Actores:", actores);
     console.log("Descripción con ID:", descripcion); // ✅ Ahora debe mostrar `id_caso`
     console.log("Evidencias:", evidencias); 
-    console.log("Intervención:", intervencion); 
+    console.log("Intervención:", intervencion);
+    console.log("Ruta de Atención:", rutaAtencion);
 
-    const idCasoGenerado = await enviarDatos(formData, actores, descripcion, evidencias, intervencion);
+    const idCasoGenerado = await enviarDatos(formData, actores, descripcion, evidencias, intervencion, rutaAtencion);
 
     if (idCasoGenerado) {
       setFormData((prev) => ({ ...prev, Id_Caso: idCasoGenerado }));
@@ -82,7 +84,7 @@ const CaseForm = () => {
       <Descricription onChange={handleDescripcionChange} />
       <Evidencias setEvidencias={setEvidencias} idCaso={formData.Id_Caso} />
       <Intervention onChange={handleIntervencionChange} />
-      <RutaAtencionForm />
+      <RutaAtencionForm setRuta_Atencion={setRuta_Atencion} idCaso={formData.Id_Caso} />
 
       <div className="mt-6 flex gap-3">
         <Button color="primary" onClick={handleSubmit}>
