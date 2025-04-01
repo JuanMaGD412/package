@@ -81,7 +81,7 @@ const Evidencias = ({setEvidencias, idCaso }) => {
               </Table>
               {/* Modal de Evidencias */}
             <ModalEvidencias isOpen={isEvidenceModalOpen} onClose={closeEvidenceModal} newEvidence={newEvidence} setNewEvidence={setNewEvidence} addEvidence={addEvidence} handleFileChange={handleFileChange} />
-      </div>
+        </div>
     
       );
 };

@@ -30,8 +30,16 @@ const Actores = ({ setActores, idCaso }) => {
         setStudents([...students, { id: students.length + 1, grado: "" }]);
     };
 
+    const deleteStudent = () => {
+        setStudents(students.slice(0, students.length - 1)); // Elimina el último estudiante
+    };
+
     const addImplicatedStudent = () => {
         setImplicatedStudents([...implicatedStudents, { id: implicatedStudents.length + 1, grado: "" }]);
+    };
+
+    const deleteImplicatedStudent = () => {
+        setImplicatedStudents(implicatedStudents.slice(0, implicatedStudents.length - 1)); // Elimina el último estudiante
     };
 
     const handleVincular = (comunidad) => {
@@ -134,7 +142,12 @@ const Actores = ({ setActores, idCaso }) => {
                 </div>
             ))}
 
-            <Button onClick={addStudent} color="blue" className="my-4">Agregar otro estudiante afectado</Button>
+            <Button onClick={addStudent} color="blue" className="my-4">
+                Agregar otro estudiante afectado
+            </Button>
+            <Button onClick={deleteStudent} color="red" className="my-4" style={{ display: students.length > 1 ? 'inline-block' : 'none' }}>
+                Eliminar un estudiante afectado
+            </Button>
 
             {implicatedStudents.map((student, index) => (
                 <div key={student.id} className="mb-6 border p-4 rounded-lg">
@@ -168,6 +181,10 @@ const Actores = ({ setActores, idCaso }) => {
             <Button onClick={addImplicatedStudent} color="blue" className="my-4">
                 Agregar otro estudiante implicado
             </Button>
+            <Button onClick={deleteImplicatedStudent} color="red" className="my-4" style={{ display: implicatedStudents.length > 1 ? 'inline-block' : 'none' }}>
+                Eliminar un estudiante afectado
+            </Button>
+
 
             <ModalComunidad isOpen={isModalOpen} onClose={closeModal} selectedGrade={selectedGrade} onVincular={handleVincular} />
         </div>

@@ -9,7 +9,7 @@ import "./css/globals.css";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MatDash-Nextjs-Free",
+  title: "Libro verde",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/logo_prosecto.png" type="image/svg+xml" />
         <ThemeModeScript />
       </head>
       <body className={`${manrope.className}`}>
