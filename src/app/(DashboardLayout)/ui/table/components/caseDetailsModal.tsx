@@ -27,14 +27,12 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-3">
-          <p><strong>Descripción:</strong> {caseData.descripcion?.version_estudiante_afectado || "Sin descripción"}</p>
-          <p><strong>Evidencias:</strong> {caseData.evidencias.length > 0 ? caseData.evidencias.map(e => e.descripcion).join(", ") : "Sin evidencias"}</p>
-          <p><strong>Intervención:</strong> {caseData.intervencion?.tipo_decision || "Sin intervención"}</p>
           <p><strong>Ruta de Atención:</strong> {caseData.rutaAtencion?.ruta_activada ? "Sí" : "No"}</p>
           <p><strong>Estado:</strong> <span className={`px-2 py-1 rounded ${caseData.estado === "Cerrado" ? "bg-green-500 text-white" : "bg-yellow-500 text-black"}`}>{caseData.estado}</span></p>
         </div>
 
         <Separator className="my-4" />
+        {/* Información básica */}
         <div className="mb-6 border p-4 rounded-lg">
               <h5 className="text-lg font-bold mb-4">Datos generales del Caso</h5>
               <Separator className="my-4" />
@@ -70,7 +68,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
               </div>
         </div>
 
-        
+        {/* Actores */}
         <div className="mb-6 border p-4 rounded-lg">
         <h5 className="text-lg font-bold">Actores Involucrados</h5>
         <Separator className="my-4" />
@@ -120,9 +118,8 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
         ))}
         </div>
         
-
+        {/* Descripción del caso */}
         <div className="mb-6 border p-4 rounded-lg">
-                {/* Descripción del caso */}
                 <h5 className="text-lg font-bold mb-4">Descripción del caso</h5>
                 <Separator className="my-4" />
         
@@ -160,6 +157,28 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
               ))}
             </Table.Body>
           </Table>
+        </div>
+        {/* Intervención y decisión */}
+        <div className="mb-6 border p-4 rounded-lg">
+          <h5 className="text-lg font-bold mb-4">Intervención y decisión</h5>
+          <Separator className="my-4" />
+    
+          <Label htmlFor="tipoDecision" value="Tipo de decisión tomada" />
+          <Select id="tipoDecision" value={caseData.intervencion?.tipo_decision || ''} required disabled>
+            <option>Seleccione un tipo</option>
+            <option value="Tarea pedagogica">Tarea pedagogíca</option>
+            <option value="Suspension">Suspensión</option>
+            <option value="Reparacion">Reparación</option>
+          </Select>
+    
+          <Label htmlFor="decisionComite" value="Decisión del comité de convivencia" className="mt-4" />
+          <Textarea id="decisionComite" value={caseData.intervencion?.decision_comite || ''} required disabled/>
+    
+          <Label htmlFor="compromisos" value="Compromisos adquiridos" className="mt-4" />
+          <Textarea id="compromisos" value={caseData.intervencion?.compromisos || ''} required disabled/>
+    
+          <Label htmlFor="fechaCompromiso" value="Fecha límite del compromiso" className="mt-4" />
+          <TextInput id="fechaCompromiso" value={new Date(caseData.intervencion?.fecha_compromiso).toLocaleDateString("en-CA")} required readOnly />
         </div>
       </Modal.Body>
       <Modal.Footer>
