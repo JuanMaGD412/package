@@ -48,18 +48,6 @@ const SidebarContent: MenuItem[] = [
         id: uniqueId(),
         url: "/ui/table",
       },
-      {
-        name: "Typography",
-        icon: "solar:text-circle-outline",
-        id: uniqueId(),
-        url: "/ui/typography",
-      },
-      {
-        name: "Shadow",
-        icon: "solar:airbuds-case-charge-outline",
-        id: uniqueId(),
-        url: "/ui/shadow",
-      },
     ],
   },
   {

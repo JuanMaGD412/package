@@ -17,12 +17,18 @@ const CasesTable = () => {
   const casesPerPage = 10;
 
   useEffect(() => {
+    fetchData();
     const getData = async () => {
       const data = await fetchCases();
       setCases(data);
     };
     getData();
   }, []);
+
+  const fetchData = async () => {
+    const data = await fetchCases();
+    setCases(data);
+  };
 
   const openModal = (caso) => {
     setSelectedCase(caso);
@@ -122,7 +128,7 @@ const CasesTable = () => {
           onPageChange={setCurrentPage}
         />
       </div>
-      <SeguimientoModal isOpen={isSeguimientoOpen} onClose={() => setIsSeguimientoOpen(false)} caseData={selectedCase} />
+      <SeguimientoModal isOpen={isSeguimientoOpen} onClose={() => { setIsSeguimientoOpen(false); fetchData();}} caseData={selectedCase} />
       <CaseDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} caseData={selectedCase} />
     </div>
   );

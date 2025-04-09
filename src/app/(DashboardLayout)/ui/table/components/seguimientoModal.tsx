@@ -31,7 +31,7 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
       alert("No se ha seleccionado un caso válido.");
       return;
     }
-
+  
     const resultado = await guardarSeguimiento(
       caseData.Id_Caso,
       responsable,
@@ -39,14 +39,22 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
       observacion,
       estadoAvance
     );
-
+  
     if (resultado.success) {
       alert("Seguimiento guardado correctamente.");
-      onClose();
+  
+      // Limpiar campos
+      setResponsable("");
+      setObservacion("");
+      setEstadoAvance("En seguimiento");
+      setFechaActual(new Date().toISOString().split("T")[0]);
+  
+      onClose(); // Cerrar modal al final
     } else {
       alert("Error al guardar el seguimiento: " + resultado.message);
     }
   };
+  
 
   return (
     <Modal show={isOpen} onClose={onClose} size="lg">
