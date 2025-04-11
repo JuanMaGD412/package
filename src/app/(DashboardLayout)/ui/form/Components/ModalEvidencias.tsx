@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Modal, Button, Label, TextInput } from "flowbite-react";
 
 const ModalEvidencias = ({ isOpen, onClose, newEvidence, setNewEvidence, addEvidence }) => {
-  const [preview, setPreview] = useState(null); // Estado para la vista previa
+  const [preview, setPreview] = useState(null);
 
   const handleFilePreview = (e) => {
     const file = e.target.files[0];
@@ -23,15 +23,15 @@ const ModalEvidencias = ({ isOpen, onClose, newEvidence, setNewEvidence, addEvid
   };
 
   const handleClose = () => {
-    setPreview(null); // Limpiar la vista previa
-    setNewEvidence({ description: "", file: null }); // Reiniciar datos
-    onClose(); // Llamar la función original de cierre
+    setPreview(null); 
+    setNewEvidence({ description: "", file: null }); 
+    onClose();
   };
 
   const handleAccept = () => {
-    addEvidence(); // Agregar evidencia
-    setPreview(null); // Limpiar la vista previa
-    setNewEvidence({ description: "", file: null }); // Reiniciar datos
+    addEvidence(); 
+    setPreview(null); 
+    setNewEvidence({ description: "", file: null });
   };
 
   return (
