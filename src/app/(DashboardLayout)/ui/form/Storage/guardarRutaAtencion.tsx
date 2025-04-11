@@ -5,7 +5,7 @@ export const guardarRutaAtencion = async (idCaso: string, rutaAtencion) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id_caso: idCaso,
-        ruta_activada: rutaAtencion.ruta_activada === true ? 1 : 0,  // ✅ Conversión correcta
+        ruta_activada: rutaAtencion.ruta_activada === true ? 1 : 0,
         tipo_remision: rutaAtencion.tipoRemision || null,
         fecha: rutaAtencion.fecha || null,
         remitido: rutaAtencion.remitido || null,

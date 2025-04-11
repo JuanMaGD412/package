@@ -2,7 +2,7 @@ export const guardarEvidencia = async (idCaso: string | null, evidencias: any[])
     try {
         if (!idCaso) throw new Error("ID del caso no proporcionado");
 
-        console.log("Evidencias recibidas en guardarEvidencia:", evidencias); // ✅ Depuración
+        console.log("Evidencias recibidas en guardarEvidencia:", evidencias); 
 
         if (!Array.isArray(evidencias) || evidencias.length === 0) {
             console.error("Evidencias recibidas no son un array:", evidencias);

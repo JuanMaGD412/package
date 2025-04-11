@@ -31,7 +31,7 @@ const Actores = ({ setActores, idCaso }) => {
     };
 
     const deleteStudent = () => {
-        setStudents(students.slice(0, students.length - 1)); // Elimina el último estudiante
+        setStudents(students.slice(0, students.length - 1)); 
     };
 
     const addImplicatedStudent = () => {
@@ -39,7 +39,7 @@ const Actores = ({ setActores, idCaso }) => {
     };
 
     const deleteImplicatedStudent = () => {
-        setImplicatedStudents(implicatedStudents.slice(0, implicatedStudents.length - 1)); // Elimina el último estudiante
+        setImplicatedStudents(implicatedStudents.slice(0, implicatedStudents.length - 1)); 
     };
 
     const handleVincular = (comunidad) => {
@@ -52,7 +52,7 @@ const Actores = ({ setActores, idCaso }) => {
             id_caso: idCaso,  
             id: comunidad.Id,
             rol: selectedStudentType,
-            Nombre: comunidad.Nombre,  // 🔹 Convertido a mayúscula para la UI
+            Nombre: comunidad.Nombre, 
             Apellido1: comunidad.Apellido1,
             Apellido2: comunidad.Apellido2,
             TipoDocumento: comunidad.TipoDocumento,
@@ -82,11 +82,6 @@ const Actores = ({ setActores, idCaso }) => {
         closeModal();
     };
     
-    
-    
-    
-
-    // **Actualizar `setActores` cuando cambian `students` o `implicatedStudents`**
     useEffect(() => {
         const actoresTransformados = [...students, ...implicatedStudents].map(actor => ({
             id_caso: idCaso,

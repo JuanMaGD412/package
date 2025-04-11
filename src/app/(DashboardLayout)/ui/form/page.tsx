@@ -32,7 +32,6 @@ const CaseForm = () => {
     fechaCompromiso: ""
   });
   const [rutaAtencion, setRuta_Atencion] = useState([]);
-  // 🔹 Cada vez que cambie `formData.Id_Caso`, actualizar `descripcion.id_caso`
   useEffect(() => {
     setDescripcion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
     setIntervencion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
@@ -65,7 +64,7 @@ const CaseForm = () => {
   const handleSubmit = async () => {
     console.log("Datos del formulario antes de enviar:", formData);
     console.log("Actores:", actores);
-    console.log("Descripción con ID:", descripcion); // ✅ Ahora debe mostrar `id_caso`
+    console.log("Descripción con ID:", descripcion); 
     console.log("Evidencias:", evidencias); 
     console.log("Intervención:", intervencion);
     console.log("Ruta de Atención:", rutaAtencion);

@@ -24,11 +24,11 @@ const Evidencias = ({setEvidencias, idCaso }) => {
         if (newEvidence.description && newEvidence.file) {
           const updatedEvidence = { 
             ...newEvidence, 
-            id_caso: idCaso // ✅ Agregamos el id del caso correctamente dentro del objeto
+            id_caso: idCaso
         };
         const updatedEvidences = [...evidences, updatedEvidence];
           setLocalEvidences(updatedEvidences);
-          setEvidencias(updatedEvidences); // ✅ Actualizamos el estado global
+          setEvidencias(updatedEvidences);
           closeEvidenceModal();
         }
       };
@@ -60,7 +60,7 @@ const Evidencias = ({setEvidencias, idCaso }) => {
               <Table.Head>
                 <Table.HeadCell>Fecha</Table.HeadCell>
                 <Table.HeadCell>Descripción</Table.HeadCell>
-                <Table.HeadCell>Tipo de Archivo</Table.HeadCell> {/* Nueva columna */}
+                <Table.HeadCell>Tipo de Archivo</Table.HeadCell> 
                 <Table.HeadCell>Tamaño</Table.HeadCell>
                 <Table.HeadCell>Acciones</Table.HeadCell>
               </Table.Head>
@@ -69,7 +69,7 @@ const Evidencias = ({setEvidencias, idCaso }) => {
                       <Table.Row key={index}>
                           <Table.Cell>{new Date().toLocaleDateString()}</Table.Cell>
                           <Table.Cell>{evidence.description}</Table.Cell>
-                          <Table.Cell>{evidence.file.type}</Table.Cell> {/* Mostrar el tipo de archivo */}
+                          <Table.Cell>{evidence.file.type}</Table.Cell>
                           <Table.Cell>{evidence.size}</Table.Cell>
                           <Table.Cell className="flex gap-2">
                               <Button size="xs" color="red" onClick={() => deleteEvidence(index)}>Eliminar</Button>

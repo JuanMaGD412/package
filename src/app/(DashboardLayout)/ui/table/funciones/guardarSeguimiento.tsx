@@ -8,7 +8,7 @@ export const guardarSeguimiento = async (
   try {
     if (!idCaso) throw new Error("ID del caso no proporcionado");
 
-    // Mapeo visual -> valor aceptado por la API
+
     const estadoBD = estadoAvance === "En seguimiento" ? "en seguimiento" : "cerrado";
 
     const response = await fetch("/api/seguimientos", {

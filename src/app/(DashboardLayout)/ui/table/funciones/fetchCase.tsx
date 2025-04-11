@@ -1,4 +1,3 @@
-// utils/fetchCases.ts
 export const fetchCases = async () => {
     try {
       const [casesRes, actoresRes, descripcionesRes, evidenciasRes, intervencionesRes, rutaRes, seguimientoRes] =
@@ -26,7 +25,6 @@ export const fetchCases = async () => {
         seguimientoRes.json(),
       ]);
   
-      // Relacionar los datos con los casos
       const casesWithDetails = casesData.map((caso) => ({
         ...caso,
         actores: actoresData.filter((a) => a.Id_Caso === caso.Id_Caso),
