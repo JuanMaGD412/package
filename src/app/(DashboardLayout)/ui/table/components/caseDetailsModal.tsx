@@ -28,7 +28,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
         <div className="space-y-4">
           <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
             <p className="text-md font-medium">Estado <span className="font-semibold"></span></p>
-            <span className={`px-3 py-1 rounded text-sm font-bold  ${caseData.estado === "Cerrado" ? "bg-red-500 text-white" : caseData.estado === "En Seguimiento" ? "bg-yellow-500 text-black" : "bg-green-500 text-white"}`}>{caseData.estado}</span>
+            <span className={`px-3 py-1 rounded text-sm font-bold  ${caseData.estado === "cerrado" ? "bg-red-500 text-white" : caseData.estado === "en seguimiento" ? "bg-yellow-500 text-white" : "bg-green-500 text-white"}`}>{caseData.estado}</span>
           </div>
           {/* Información general */}
           <div className="p-4 bg-white rounded-lg shadow">
@@ -117,88 +117,104 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
             </Table>
           </div>
           {/* Intervención y decisión */}
-<div className="mb-6 border p-6 rounded-xl shadow-lg bg-white">
-  <h5 className="text-xl font-bold mb-4 text-gray-700">Intervención y decisión</h5>
-  <Separator className="my-4" />
+          <div className="mb-6 border p-6 rounded-xl shadow-lg bg-white">
+            <h5 className="text-xl font-bold mb-4 text-gray-700">Intervención y decisión</h5>
+            <Separator className="my-4" />
 
-  <Label htmlFor="tipoDecision" value="Tipo de decisión tomada" className="font-medium text-gray-600" />
-  <Select
-    id="tipoDecision"
-    value={caseData.intervencion?.tipo_decision || ''}
-    required
-    disabled
-    className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
-  >
-    <option>Seleccione un tipo</option>
-    <option value="Tarea pedagogica">Tarea pedagógica</option>
-    <option value="Suspension">Suspensión</option>
-    <option value="Reparacion">Reparación</option>
-  </Select>
+            <Label htmlFor="tipoDecision" value="Tipo de decisión tomada" className="font-medium text-gray-600" />
+            <Select
+              id="tipoDecision"
+              value={caseData.intervencion?.tipo_decision || ''}
+              required
+              disabled
+              className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
+            >
+              <option>Seleccione un tipo</option>
+              <option value="Tarea pedagogica">Tarea pedagógica</option>
+              <option value="Suspension">Suspensión</option>
+              <option value="Reparacion">Reparación</option>
+            </Select>
 
-  <Label htmlFor="decisionComite" value="Decisión del comité de convivencia" className="mt-4 font-medium text-gray-600" />
-  <Textarea
-    id="decisionComite"
-    value={caseData.intervencion?.decision_comite || ''}
-    required
-    disabled
-    className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
-  />
+            <Label htmlFor="decisionComite" value="Decisión del comité de convivencia" className="mt-4 font-medium text-gray-600" />
+            <Textarea
+              id="decisionComite"
+              value={caseData.intervencion?.decision_comite || ''}
+              required
+              disabled
+              className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
+            />
 
-  <Label htmlFor="compromisos" value="Compromisos adquiridos" className="mt-4 font-medium text-gray-600" />
-  <Textarea
-    id="compromisos"
-    value={caseData.intervencion?.compromisos || ''}
-    required
-    disabled
-    className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
-  />
+            <Label htmlFor="compromisos" value="Compromisos adquiridos" className="mt-4 font-medium text-gray-600" />
+            <Textarea
+              id="compromisos"
+              value={caseData.intervencion?.compromisos || ''}
+              required
+              disabled
+              className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
+            />
 
-  <Label htmlFor="fechaCompromiso" value="Fecha límite del compromiso" className="mt-4 font-medium text-gray-600" />
-  <TextInput id="fechaCompromiso" value={new Date(caseData.intervencion?.fecha_compromiso).toLocaleDateString("en-CA")} required readOnly className="border p-2 rounded-lg w-full mt-1 bg-gray-100"/>
-</div>
+            <Label htmlFor="fechaCompromiso" value="Fecha límite del compromiso" className="mt-4 font-medium text-gray-600" />
+            <TextInput id="fechaCompromiso" value={new Date(caseData.intervencion?.fecha_compromiso).toLocaleDateString("en-CA")} required readOnly className="border p-2 rounded-lg w-full mt-1 bg-gray-100"/>
+          </div>
+          {/* Ruta de atención */}
+          <div className="p-6 border rounded-xl shadow-lg bg-white">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Ruta de atención</h2>
+            <label className="block font-medium text-gray-600">¿Se activó ruta de atención?</label>
+            <div className="flex gap-4 mt-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="rutaAtencion" value="1" checked={caseData.rutaAtencion?.ruta_activada === 1} disabled />
+                Sí
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="rutaAtencion" value="0" checked={caseData.rutaAtencion?.ruta_activada === 0} disabled />
+                No
+              </label>
+            </div>
 
-{/* Ruta de atención */}
-<div className="p-6 border rounded-xl shadow-lg bg-white">
-  <h2 className="text-xl font-semibold mb-4 text-gray-700">Ruta de atención</h2>
-  <label className="block font-medium text-gray-600">¿Se activó ruta de atención?</label>
-  <div className="flex gap-4 mt-2">
-    <label className="flex items-center gap-2 cursor-pointer">
-      <input type="radio" name="rutaAtencion" value="1" checked={caseData.rutaAtencion?.ruta_activada === 1} disabled />
-      Sí
-    </label>
-    <label className="flex items-center gap-2 cursor-pointer">
-      <input type="radio" name="rutaAtencion" value="0" checked={caseData.rutaAtencion?.ruta_activada === 0} disabled />
-      No
-    </label>
-  </div>
+            {caseData.rutaAtencion?.ruta_activada === 1 && (
+              <div className="mt-6 space-y-4 border-t pt-4">
+                <label className="block font-medium text-gray-600">Tipo de remisión:</label>
+                <select className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.tipo_remision} required disabled>
+                  <option>Seleccione un tipo</option>
+                  <option>Urgente</option>
+                  <option>Regular</option>
+                </select>
 
-  {caseData.rutaAtencion?.ruta_activada === 1 && (
-    <div className="mt-6 space-y-4 border-t pt-4">
-      <label className="block font-medium text-gray-600">Tipo de remisión:</label>
-      <select className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.tipo_remision} required disabled>
-        <option>Seleccione un tipo</option>
-        <option>Urgente</option>
-        <option>Regular</option>
-      </select>
+                <label className="block font-medium text-gray-600">Fecha:</label>
+                <input type="date" className="border p-2 w-full rounded-lg bg-gray-100" value={new Date(caseData.rutaAtencion?.fecha).toLocaleDateString("en-CA")} required readOnly />
 
-      <label className="block font-medium text-gray-600">Fecha:</label>
-      <input type="date" className="border p-2 w-full rounded-lg bg-gray-100" value={new Date(caseData.rutaAtencion?.fecha).toLocaleDateString("en-CA")} required readOnly />
+                <label className="block font-medium text-gray-600">Remitido:</label>
+                <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.remitido} required readOnly />
 
-      <label className="block font-medium text-gray-600">Remitido:</label>
-      <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.remitido} required readOnly />
+                <label className="block font-medium text-gray-600">Institución a la que se remite:</label>
+                <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.institucion} required readOnly />
 
-      <label className="block font-medium text-gray-600">Institución a la que se remite:</label>
-      <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.institucion} required readOnly />
+                <label className="block font-medium text-gray-600">Contacto:</label>
+                <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.contacto} required readOnly />
 
-      <label className="block font-medium text-gray-600">Contacto:</label>
-      <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.contacto} required readOnly />
+                <label className="block font-medium text-gray-600">Observaciones:</label>
+                <textarea className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.observaciones} required readOnly></textarea>
+              </div>
+            )}
+          </div>
 
-      <label className="block font-medium text-gray-600">Observaciones:</label>
-      <textarea className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.observaciones} required readOnly></textarea>
-    </div>
-  )}
-</div>
-
+          {/* Seguimiento */}
+          <div className="p-6 border rounded-xl shadow-lg bg-white">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow">
+                <div>
+                  <Label htmlFor="responsable" value="Responsable" />
+                  <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.seguimiento?.responsable} required readOnly/>
+                </div>
+                <div>
+                  <Label htmlFor="fecha" value="Fecha del seguimiento" />
+                  <input type="date" className="border p-2 w-full rounded-lg bg-gray-100" value={new Date(caseData.seguimiento?.fecha).toLocaleDateString("en-CA")} required readOnly />
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <Label htmlFor="observacion" value="Observaciones del seguimiento" />
+                <textarea className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.seguimiento?.observacion} required readOnly/>
+              </div>
+          </div>
         </div>
       </Modal.Body>
       <Modal.Footer className="bg-gray-100 p-4 rounded-b-lg flex justify-end">

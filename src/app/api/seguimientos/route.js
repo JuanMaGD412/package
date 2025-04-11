@@ -62,3 +62,13 @@ export async function POST(req) {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const [rows] = await pool.query("SELECT * FROM seguimientos");
+    return NextResponse.json(rows, { status: 200 });
+  } catch (error) {
+    console.error("Error al obtener los casos:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+  }
+}
