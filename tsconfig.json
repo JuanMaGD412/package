@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(DashboardLayout)/ui/form/Components/description.js", "src/app/(DashboardLayout)/ui/form/Components/evidencias.js", "src/app/(DashboardLayout)/ui/form/Components/intervention.js", "src/app/(DashboardLayout)/ui/form/Components/ModalEvidencias.js", "src/app/(DashboardLayout)/ui/form/Components/rutaAtencion.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(DashboardLayout)/ui/form/Components/description.js", "src/app/(DashboardLayout)/ui/form/Components/evidencias.js", "src/app/(DashboardLayout)/ui/form/Components/intervention.js", "src/app/(DashboardLayout)/ui/form/Components/ModalEvidencias.js", "src/app/(DashboardLayout)/ui/form/Components/rutaAtencion.js"],
   "exclude": ["node_modules"]
 }

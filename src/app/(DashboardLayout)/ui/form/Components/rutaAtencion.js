@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
-  const [rutaAtencion, setRutaAtencion] = useState<boolean | null>(null);
+  const [rutaAtencion, setRutaAtencion] = useState(null);
   const [tipoRemision, setTipoRemision] = useState("");
   const [fecha, setFecha] = useState("");
   const [remitido, setRemitido] = useState("");
