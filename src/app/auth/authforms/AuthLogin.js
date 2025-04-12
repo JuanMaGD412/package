@@ -22,7 +22,7 @@ const AuthLogin = () => {
 
     if (res.ok) {
       alert("Login exitoso");
-      window.location.href = "/dashboard"; // Redirigir a dashboard
+      window.location.href = "/dashboard";
     } else {
       setError(data.error);
     }

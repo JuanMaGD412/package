@@ -1,24 +1,13 @@
-import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-
-// Configurar conexión a MySQL
-const db = await mysql.createConnection({
-    host: '127.0.0.1', // O usa 'localhost'
-    user: 'root',
-    password: 'Juanma412',
-    database: 'libroverde',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+import pool from "../../../lib/db"; // Conexión a la BD
 
 export async function POST(req) {
   try {
     const { username, password } = await req.json();
 
     // Buscar usuario en la BD
-    const [rows] = await db.execute("SELECT * FROM users WHERE username = ?", [username]);
+    const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
 
     if (rows.length === 0) {
       return NextResponse.json({ error: "Usuario no encontrado" }, { status: 401 });
