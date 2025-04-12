@@ -1,4 +1,4 @@
-export const guardarActores = async (idCaso: string | null, actores: any[]): Promise<{ success: boolean; message: string }> => {
+export const guardarActores = async (idCaso, actores) => {
     try {
         if (!idCaso) throw new Error("ID del caso no proporcionado");
         if (!actores.length) throw new Error("No hay actores para guardar");

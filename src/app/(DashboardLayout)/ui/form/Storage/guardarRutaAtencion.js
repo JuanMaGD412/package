@@ -1,4 +1,4 @@
-export const guardarRutaAtencion = async (idCaso: string, rutaAtencion) => {
+export const guardarRutaAtencion = async (idCaso, rutaAtencion) => {
   try {
     const response = await fetch("/api/rutaAtencion", {
       method: "POST",

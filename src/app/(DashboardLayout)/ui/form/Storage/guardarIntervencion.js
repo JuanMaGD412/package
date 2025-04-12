@@ -1,10 +1,10 @@
 export const guardarIntervencion = async (
-  idCaso: string | null,
-  tipoDecision: string,
-  decisionComite: string,
-  compromisos: string,
-  fechaCompromiso: string
-): Promise<{ success: boolean; message: string }> => {
+  idCaso,
+  tipoDecision,
+  decisionComite,
+  compromisos,
+  fechaCompromiso
+)=> {
   try {
     if (!idCaso) throw new Error("ID del caso no proporcionado");
 

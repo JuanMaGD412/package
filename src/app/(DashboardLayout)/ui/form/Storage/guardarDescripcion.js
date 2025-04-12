@@ -1,9 +1,9 @@
 export const guardarDescripcion = async (
-    idCaso: string | null,
-    version_estudiante_afectado: string,
-    version_estudiante_implicado: string,
-    version_testigos: string
-): Promise<{ success: boolean; message: string }> => {
+    idCaso,
+    version_estudiante_afectado,
+    version_estudiante_implicado,
+    version_testigos
+) => {
     try {
         if (!idCaso) throw new Error("ID del caso no proporcionado");
         if (!version_estudiante_afectado && !version_estudiante_implicado && !version_testigos) {

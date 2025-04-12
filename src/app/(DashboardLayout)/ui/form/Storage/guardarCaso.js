@@ -1,4 +1,4 @@
-export const guardarCaso = async (formData: any) => {
+export const guardarCaso = async (formData) => {
     try {
         const response = await fetch("/api/casos", {
             method: "POST",

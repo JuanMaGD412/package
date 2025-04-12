@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(DashboardLayout)/ui/form/Components/description.js", "src/app/(DashboardLayout)/ui/form/Components/evidencias.js", "src/app/(DashboardLayout)/ui/form/Components/intervention.js", "src/app/(DashboardLayout)/ui/form/Components/ModalEvidencias.js", "src/app/(DashboardLayout)/ui/form/Components/rutaAtencion.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(DashboardLayout)/ui/form/Components/description.js", "src/app/(DashboardLayout)/ui/form/Components/evidencias.js", "src/app/(DashboardLayout)/ui/form/Components/intervention.js", "src/app/(DashboardLayout)/ui/form/Components/ModalEvidencias.js", "src/app/(DashboardLayout)/ui/form/Components/rutaAtencion.js", "src/app/(DashboardLayout)/ui/table/components/caseDetailsModal.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarRutaAtencion.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarIntervencion.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarEvidencias.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarDescripcion.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarCaso.js", "src/app/(DashboardLayout)/ui/form/Storage/guardarActores.js", "src/app/(DashboardLayout)/ui/form/Storage/enviarDatos.js", "src/app/(DashboardLayout)/ui/table/page.js"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-export const guardarEvidencia = async (idCaso: string | null, evidencias: any[]): Promise<{ success: boolean; message: string }> => {
+export const guardarEvidencia = async (idCaso, evidencias) => {
     try {
         if (!idCaso) throw new Error("ID del caso no proporcionado");
 
