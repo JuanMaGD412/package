@@ -13,7 +13,7 @@ const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular }) => {
         {!loading && !error && (
           <Table>
             <Table.Head>
-            <Table.HeadCell>Documeto</Table.HeadCell>
+              <Table.HeadCell>Documento</Table.HeadCell>
               <Table.HeadCell>Nombre</Table.HeadCell>
               <Table.HeadCell>Apellido 1</Table.HeadCell>
               <Table.HeadCell>Apellido 2</Table.HeadCell>
@@ -27,7 +27,9 @@ const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular }) => {
                   <Table.Cell>{est.Apellido1}</Table.Cell>
                   <Table.Cell>{est.Apellido2}</Table.Cell>
                   <Table.Cell>
-                    <Button size="xs" color="blue"  onClick={() => onVincular(est)}> Vincular </Button>
+                    <Button size="xs" color="blue" onClick={() => onVincular(est)}>
+                      Vincular
+                    </Button>
                   </Table.Cell>
                 </Table.Row>
               ))}
