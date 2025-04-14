@@ -22,7 +22,7 @@ export const guardarEvidencia = async (idCaso, evidencias) => {
             }
         });
 
-        console.log("FormData enviado:", formData); // ✅ Verifica el contenido antes de enviarlo
+        console.log("FormData enviado:", formData); 
 
         const response = await fetch("/api/evidencias", {
             method: "POST",

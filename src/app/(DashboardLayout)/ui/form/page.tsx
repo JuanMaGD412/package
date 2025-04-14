@@ -19,7 +19,7 @@ const CaseForm = () => {
   });
   const [actores, setActores] = useState([]);
   const [descripcion, setDescripcion] = useState({
-    id_caso: "", // ✅ Ahora siempre tiene un campo `id_caso`
+    id_caso: "",
     version_estudiante_afectado: "",
     version_estudiante_implicado: "",
     version_testigos: "",

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Label, TextInput, Textarea, Select, Button } from "flowbite-react";
 import { guardarSeguimiento } from "../funciones/guardarSeguimiento";
 
-// Definir el tipo literal
+
 type EstadoAvance = "En seguimiento" | "Cerrado";
 
 interface SeguimientoModalProps {
@@ -43,13 +43,13 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
     if (resultado.success) {
       alert("Seguimiento guardado correctamente.");
   
-      // Limpiar campos
+      
       setResponsable("");
       setObservacion("");
       setEstadoAvance("En seguimiento");
       setFechaActual(new Date().toISOString().split("T")[0]);
   
-      onClose(); // Cerrar modal al final
+      onClose(); 
     } else {
       alert("Error al guardar el seguimiento: " + resultado.message);
     }
@@ -57,7 +57,7 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
   
 
   return (
-    <Modal show={isOpen} onClose={onClose} size="lg">
+    <Modal show={isOpen} onClose={onClose} size="3xl" className="max-w-7xl">
       <Modal.Header className="bg-blue-600 text-white">Iniciar Seguimiento</Modal.Header>
       <Modal.Body className="bg-gray-50">
         <div className="space-y-4">

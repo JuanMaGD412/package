@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextInput, Select } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
 import { IoSearchCircle } from "react-icons/io5";
@@ -23,22 +23,26 @@ const Actores = ({ setActores, idCaso }) => {
   const onVincular = (estudiante) => {
     const nombreCompletoEstudiante = `${estudiante.Nombre} ${estudiante.Apellido1} ${estudiante.Apellido2}`;
     const nombreCompletoAcudiente = `${estudiante.NombreAcudiente} ${estudiante.Apellido1Acudiente} ${estudiante.Apellido2Acudiente}`;
-    setStudents((prev) => [
-      ...prev,
-      {
-        id_caso: idCaso,
-        id: estudiante.id,
-        nombre_completo: nombreCompletoEstudiante,
-        tipo_documento: estudiante.TipoDocumento,
-        documento_id: estudiante.DocumentoId,
-        rol: "Seleccione", 
-        nombre_acudiente: nombreCompletoAcudiente,
-        telefono_acudiente: estudiante.TelefonoAcudiente,
-        email_acudiente: estudiante.EmailAcudiente,
-      },
-    ]);
+  
+    const nuevoEstudiante = {
+      id_caso: idCaso,
+      id: estudiante.id,
+      nombre_completo: nombreCompletoEstudiante,
+      tipo_documento: estudiante.TipoDocumento,
+      documento_id: estudiante.DocumentoId,
+      rol: "",
+      nombre_acudiente: nombreCompletoAcudiente,
+      telefono_acudiente: estudiante.TelefonoAcudiente,
+      email_acudiente: estudiante.EmailAcudiente,
+    };
+    
+  
+    const nuevosEstudiantes = [...students, nuevoEstudiante];
+    setStudents(nuevosEstudiantes);
+    setActores(nuevosEstudiantes);
     closeModal();
   };
+  
 
   const handleRolChange = (rol, index) => {
     setStudents((prevStudents) =>
@@ -47,16 +51,19 @@ const Actores = ({ setActores, idCaso }) => {
       )
     );
   };
+  
+
   useEffect(() => {
-      setActores([...students]);
-  }, [students, setActores]);
+  setActores(students);
+}, [students]);
+
   return (
     <div className="mb-6 border p-6 rounded-xl shadow-sm bg-white">
     <h5 className="text-xl font-semibold text-gray-800 mb-4">Actores</h5>
     <Separator className="my-4" />
   
     <div className="flex items-center gap-4 mb-6">
-      <TextInput type="text" placeholder="Buscar por grado"value={studentsGrade}onChange={(e) => setStudentsGrade(e.target.value)} className="w-48"/>
+      <TextInput type="text" placeholder="Buscar por grado(Salón)"value={studentsGrade}onChange={(e) => setStudentsGrade(e.target.value)} className="w-48"/>
       <Button color="gray" onClick={() => openModal(studentsGrade)} className="p-0">
         <IoSearchCircle size={36} className="text-blue-600 hover:text-blue-800 transition" />
       </Button>
@@ -79,11 +86,16 @@ const Actores = ({ setActores, idCaso }) => {
           {students.map((student, index) => (
             <tr key={student.id}className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
               <td className="px-4 py-3">
-                <Select value={student.rol} onChange={(e) => handleRolChange(e.target.value, index)} >
-                  <option value="afectado">Afectado</option>
-                  <option value="implicado">Implicado</option>
-                  <option value="testigo">Testigo</option>
-                </Select>
+              <Select
+                value={student.rol}
+                onChange={(e) => handleRolChange(e.target.value, index)}
+              >
+                <option value="">Seleccione un rol</option>
+                <option value="afectado">Afectado</option>
+                <option value="implicado">Implicado</option>
+                <option value="testigo">Testigo</option>
+              </Select>
+
               </td>
               <td className="px-4 py-3">{student.nombre_completo}</td>
               <td className="px-4 py-3">{student.tipo_documento}</td>
@@ -97,8 +109,15 @@ const Actores = ({ setActores, idCaso }) => {
       </table>
     </div>
   
-    <ModalComunidad isOpen={isModalOpen} onClose={closeModal} selectedGrade={selectedGrade} onVincular={onVincular}
+    <ModalComunidad
+      isOpen={isModalOpen}
+      onClose={closeModal}
+      selectedGrade={selectedGrade}
+      onVincular={onVincular}
+      actores={students} 
     />
+
+
     </div>
   
   );

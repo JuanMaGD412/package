@@ -7,7 +7,6 @@ export const obtenerId = async (): Promise<string> => {
         return "000001";
       }
   
-      // Extraer número y sumarle 1
       const nextId = parseInt(data.lastId, 10) + 1;
       return nextId.toString().padStart(6, "0");
     } catch (error) {

@@ -24,7 +24,6 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
       return null;
     }
 
-    // ✅ Guardar el caso y obtener el ID
     const casoResponse = await guardarCaso(formData);
     if (!casoResponse.success) {
       alert(`Error al guardar el caso: ${casoResponse.message}`);
@@ -39,14 +38,12 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
       return null;
     }
 
-    // ✅ Guardar actores
     const actoresResponse = await guardarActores(idCaso, actores);
     if (!actoresResponse.success) {
       alert(`Error al guardar actores: ${actoresResponse.message}`);
       return null;
     }
 
-    // ✅ Guardar descripción
     const descripcionResponse = await guardarDescripcion(
       idCaso,
       descripcion.version_estudiante_afectado,
@@ -59,7 +56,6 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
       return null;
     }
 
-    // ✅ Guardar evidencias
     console.log("Enviando evidencias:", evidencias);
     const evidenciaResponse = await guardarEvidencia(idCaso, evidencias);
     if (!evidenciaResponse.success) {
@@ -67,7 +63,6 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
         return null;
     }
 
-    // ✅ Guardar ruta de atención
     if (rutaAtencion && rutaAtencion.activa !== null) {
       const rutaAtencionResponse = await guardarRutaAtencion(idCaso, rutaAtencion);
       if (!rutaAtencionResponse.success) {

@@ -1,12 +1,11 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import pool from "../../../lib/db"; // Conexión a la BD
+import pool from "../../../lib/db"; 
 
 export async function POST(req) {
   try {
     const { username, password } = await req.json();
 
-    // Buscar usuario en la BD
     const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
 
     if (rows.length === 0) {
@@ -15,7 +14,6 @@ export async function POST(req) {
 
     const user = rows[0];
 
-    // Comparar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json({ error: "Contraseña incorrecta" }, { status: 401 });

@@ -16,7 +16,6 @@ export async function POST(req) {
       return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
     }
 
-    // Consultar si ya existe un seguimiento para el caso
     const [rows] = await pool.query(
       "SELECT observacion FROM seguimientos WHERE id_caso = ? LIMIT 1",
       [idCaso]
@@ -26,7 +25,6 @@ export async function POST(req) {
     let resultado;
 
     if (rows.length > 0) {
-      // Ya existe: concatenar observación y actualizar
       const observacionAnterior = rows[0].observacion || "";
       const observacionFinal = observacionAnterior
         ? `${observacionAnterior}\n${nuevaLinea}`
@@ -40,7 +38,6 @@ export async function POST(req) {
       await pool.query(updateSql, [responsable, fecha, observacionFinal, idCaso]);
       resultado = "actualizado";
     } else {
-      // No existe: insertar nuevo
       const insertSql = `
         INSERT INTO seguimientos (id_caso, responsable, fecha, observacion)
         VALUES (?, ?, ?, ?)
@@ -49,7 +46,6 @@ export async function POST(req) {
       resultado = "insertado";
     }
 
-    // Actualizar estado del caso en tabla 'casos'
     const updateEstadoSql = "UPDATE casos SET estado = ? WHERE Id_Caso = ?";
     await pool.query(updateEstadoSql, [estadoNormalizado, idCaso]);
 

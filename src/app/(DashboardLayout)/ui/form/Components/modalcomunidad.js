@@ -1,8 +1,17 @@
 import { Modal, Table, Button } from "flowbite-react";
 import useComunidad from "../../../../service/comunidad";
 
-const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular }) => {
+const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular, actores }) => {
   const { data: estudiantes, loading, error } = useComunidad(selectedGrade);
+
+  const manejarVinculacion = (est) => {
+    const yaVinculado = actores.some(actor => actor.documento_id === est.DocumentoId);
+    if (yaVinculado) {
+      alert("Este estudiante ya ha sido vinculado.");
+      return;
+    }
+    onVincular(est);
+  };
 
   return (
     <Modal show={isOpen} onClose={onClose} size="lg">
@@ -27,7 +36,7 @@ const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular }) => {
                   <Table.Cell>{est.Apellido1}</Table.Cell>
                   <Table.Cell>{est.Apellido2}</Table.Cell>
                   <Table.Cell>
-                    <Button size="xs" color="blue" onClick={() => onVincular(est)}>
+                    <Button size="xs" color="blue" onClick={() => manejarVinculacion(est)}>
                       Vincular
                     </Button>
                   </Table.Cell>

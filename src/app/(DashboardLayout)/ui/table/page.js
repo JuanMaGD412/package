@@ -1,44 +1,73 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Badge, Dropdown, Modal, Table } from "flowbite-react";
+import { Badge, Dropdown, Modal, Table, TextInput, Pagination } from "flowbite-react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Icon } from "@iconify/react";
 import { fetchCases } from "./funciones/fetchCase";
 import CaseDetailsModal from "./components/caseDetailsModal";
+import SeguimientoModal from "./components/seguimientoModal";
 
 const CasesTable = () => {
   const [cases, setCases] = useState([]);
   const [selectedCase, setSelectedCase] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const casesPerPage = 10;
 
   useEffect(() => {
-    fetchData();
-    const getData = async () => {
+    const fetchData = async () => {
       const data = await fetchCases();
       setCases(data);
     };
-
-    getData();
+    fetchData();
   }, []);
-
-  const fetchData = async () => {
-    const data = await fetchCases();
-    setCases(data);
-  };
 
   const openModal = (caso) => {
     setSelectedCase(caso);
     setIsModalOpen(true);
   };
 
+  const openSeguimientoModal = (caso) => {
+    setSelectedCase(caso);
+    setIsSeguimientoOpen(true);
+  };
+
   const tableActionData = [
     { icon: "solar:eye-bold", listtitle: "Ver Detalles", action: openModal },
-    { icon: "solar:pen-new-square-broken", listtitle: "Editar Caso", action: () => alert("Funcionalidad en desarrollo") },
+    { icon: "solar:pen-new-square-broken", listtitle: "Iniciar seguimiento", action: openSeguimientoModal },
   ];
+
+  const filteredCases = cases.filter((caso) => {
+    const search = searchTerm.toLowerCase();
+    const actorMatch = caso.actores?.some((actor) =>
+      actor.nombre_completo?.toLowerCase().includes(search)
+    );
+    const idMatch = caso.Id_Caso?.toString().includes(search);
+    const fechaMatch = new Date(caso.fecha_caso).toLocaleDateString().toLowerCase().includes(search);
+    return actorMatch || idMatch || fechaMatch;
+  });
+
+  const totalPages = Math.ceil(filteredCases.length / casesPerPage);
+  const paginatedCases = filteredCases.slice((currentPage - 1) * casesPerPage, currentPage * casesPerPage);
 
   return (
     <div className="rounded-xl shadow-md bg-white p-6 relative w-full break-words">
-      <h5 className="text-lg font-semibold">Casos de Convivencia</h5>
+      <h5 className="text-lg font-semibold">Gestión de Casos de Convivencia</h5>
+
+      <div className="mb-4 flex justify-end">
+        <TextInput
+          placeholder="Buscar por ID, actor o fecha"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="w-80"
+        />
+      </div>
+
       <div className="mt-3 overflow-x-auto">
         <Table hoverable>
           <Table.Head>
@@ -51,16 +80,26 @@ const CasesTable = () => {
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {cases.length > 0 ? (
-              cases.map((item) => (
+            {paginatedCases.length > 0 ? (
+              paginatedCases.map((item) => (
                 <Table.Row key={item.Id_Caso}>
                   <Table.Cell>{item.Id_Caso}</Table.Cell>
                   <Table.Cell>{new Date(item.fecha_caso).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>{item.tipo_caso}</Table.Cell>
-                  <Table.Cell>{item.actores.length > 0 ? item.actores.map(a => a.nombre).join(", ") : "Sin actores"}</Table.Cell>
+                  <Table.Cell>
+                    {item.actores?.length > 0 ? (
+                      <ul className="list-disc list-inside">
+                        {item.actores.map((a, i) => (
+                          <li key={i} className="ml-2">{a.nombre_completo}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      "Sin actores"
+                    )}
+                  </Table.Cell>
                   <Table.Cell>{item.descripcion?.version_estudiante_afectado || "Sin descripción"}</Table.Cell>
                   <Table.Cell>
-                    <Badge color={item.estado === "Cerrado" ? "success" : "warning"}>
+                    <Badge color={item.estado === "cerrado" ? "failure" : item.estado === "en seguimiento" ? "warning" : "green"}>
                       {item.estado}
                     </Badge>
                   </Table.Cell>
@@ -75,7 +114,7 @@ const CasesTable = () => {
                       )}
                     >
                       {tableActionData.map((actionItem, index) => (
-                        <Dropdown.Item key={index} className="flex gap-3" onClick={() => actionItem.action(item)} >
+                        <Dropdown.Item key={index} className="flex gap-3" onClick={() => actionItem.action(item)}>
                           <Icon icon={actionItem.icon} height={18} />
                           <span>{actionItem.listtitle}</span>
                         </Dropdown.Item>
@@ -87,19 +126,25 @@ const CasesTable = () => {
             ) : (
               <Table.Row>
                 <Table.Cell colSpan={7} className="text-center">
-                  No hay casos registrados
+                  No se encontraron resultados
                 </Table.Cell>
               </Table.Row>
             )}
           </Table.Body>
         </Table>
       </div>
-<<<<<<< HEAD:src/app/(DashboardLayout)/ui/table/page.js
-      <SeguimientoModal isOpen={isSeguimientoOpen} onClose={() => { setIsSeguimientoOpen(false); fetchData();}} caseData={selectedCase} />
-=======
+
+      <div className="flex justify-center mt-6">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+          showIcons
+        />
+      </div>
 
       {/* Modal de detalles del caso */}
->>>>>>> parent of 23611e0 (seguimiento agg):src/app/(DashboardLayout)/ui/table/page.tsx
+      <SeguimientoModal isOpen={isSeguimientoOpen} onClose={() => { setIsSeguimientoOpen(false); fetchData();}} caseData={selectedCase} />
       <CaseDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} caseData={selectedCase} />
     </div>
   );

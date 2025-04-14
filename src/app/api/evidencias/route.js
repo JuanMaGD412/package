@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "../../../lib/db"; // Conexión a la BD
+import pool from "../../../lib/db";
 
 export async function POST(req) {
   try {
@@ -29,13 +29,11 @@ export async function POST(req) {
 
     if (!evidencias.length) throw new Error("No hay evidencias para guardar");
 
-    // Consulta para insertar múltiples evidencias en la base de datos
     const sql = `
       INSERT INTO evidencias (id_caso, descripcion, archivo, tipo_archivo, tamano_archivo) 
       VALUES ?
     `;
 
-    // Ejecutamos la consulta
     const [result] = await pool.query(sql, [evidencias]);
 
     return NextResponse.json({

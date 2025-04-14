@@ -10,11 +10,11 @@ const useComunidad = (grado) => {
 
     const fetchData = async () => {
         try {
-          console.log("Grado enviado a la API:", grado); // Debugging
+          console.log("Grado enviado a la API:", grado);
           const response = await fetch(`/api/comunidad?grado=${grado}`);
           if (!response.ok) throw new Error("Error al obtener los datos");
           const result = await response.json();
-          console.log("Datos recibidos:", result); // Debugging
+          console.log("Datos recibidos:", result);
           setData(result);
         } catch (err) {
           setError(err.message);
