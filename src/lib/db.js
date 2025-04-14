@@ -1,14 +1,16 @@
-import mysql from 'mysql2/promise';
+import pkg from 'pg';
+const { Pool } = pkg;
 
-// Configuración de la conexión
-const pool = mysql.createPool({
-  host: '127.0.0.1', // O usa 'localhost'
-  user: 'root',
-  password: 'Juanma412',
-  database: 'libroverde',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+const pool = new Pool({
+  host: 'db.mepqgipnicweghojgycb.supabase.co',
+  user: 'postgres',
+  password: 'libroverde412',
+  database: 'postgres',
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  max: 10,
 });
 
 export default pool;

@@ -23,22 +23,38 @@ export async function POST(req) {
       const arrayBuffer = await file.arrayBuffer();
       const fileBuffer = Buffer.from(arrayBuffer);
 
-      evidencias.push([id_caso, description, fileBuffer, file.type, size]);
+      evidencias.push([
+        id_caso,
+        description,
+        fileBuffer,
+        file.type,
+        size
+      ]);
+
       index++;
     }
 
     if (!evidencias.length) throw new Error("No hay evidencias para guardar");
 
+    // Construcción dinámica de VALUES ($1, $2, $3, ...)
+    const values = [];
+    const placeholders = evidencias.map((_, i) => {
+      const offset = i * 5;
+      values.push(...evidencias[i]);
+      return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5})`;
+    });
+
     const sql = `
-      INSERT INTO evidencias (id_caso, descripcion, archivo, tipo_archivo, tamano_archivo) 
-      VALUES ?
+      INSERT INTO evidencias 
+      (id_caso, descripcion, archivo, tipo_archivo, tamano_archivo)
+      VALUES ${placeholders.join(", ")}
     `;
 
-    const [result] = await pool.query(sql, [evidencias]);
+    const result = await pool.query(sql, values);
 
     return NextResponse.json({
       message: "Evidencias guardadas exitosamente",
-      affectedRows: result.affectedRows
+      rowCount: result.rowCount
     }, { status: 201 });
 
   } catch (error) {
@@ -49,10 +65,10 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    const [rows] = await pool.query("SELECT * FROM evidencias");
-    return NextResponse.json(rows, { status: 200 });
+    const result = await pool.query("SELECT * FROM evidencias");
+    return NextResponse.json(result.rows, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener los casos:", error);
+    console.error("Error al obtener las evidencias:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

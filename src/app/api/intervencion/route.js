@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "../../../lib/db"; 
+import pool from "../../../lib/db";
 
 export async function POST(req) {
   try {
@@ -10,11 +10,12 @@ export async function POST(req) {
     }
 
     const sql = `
-      INSERT INTO intervenciones (id_caso, tipo_decision, decision_comite, compromisos, fecha_compromiso) 
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO intervenciones 
+      (id_caso, tipo_decision, decision_comite, compromisos, fecha_compromiso) 
+      VALUES ($1, $2, $3, $4, $5)
     `;
 
-    const [result] = await pool.query(sql, [
+    const result = await pool.query(sql, [
       id_caso, 
       tipoDecision || null, 
       decisionComite || null, 
@@ -24,7 +25,7 @@ export async function POST(req) {
 
     return NextResponse.json({ 
       message: "Intervención guardada exitosamente", 
-      affectedRows: result.affectedRows 
+      rowCount: result.rowCount 
     }, { status: 201 });
 
   } catch (error) {
@@ -35,8 +36,8 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    const [rows] = await pool.query("SELECT * FROM intervenciones");
-    return NextResponse.json(rows, { status: 200 });
+    const result = await pool.query("SELECT * FROM intervenciones");
+    return NextResponse.json(result.rows, { status: 200 });
   } catch (error) {
     console.error("Error al obtener los casos:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
