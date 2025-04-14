@@ -8,6 +8,7 @@ import Evidencias from "./Components/evidencias";
 import RutaAtencionForm from "./Components/rutaAtencion";
 import Intervention from "./Components/intervention";
 import { enviarDatos } from "./Storage/enviarDatos";
+import { obtenerId } from "./Storage/obtenerId";
 
 const CaseForm = () => {
   const [formData, setFormData] = useState({
@@ -33,6 +34,11 @@ const CaseForm = () => {
   });
   const [rutaAtencion, setRuta_Atencion] = useState([]);
   useEffect(() => {
+    const fetchIdCaso = async () => {
+      const newId = await obtenerId();
+      setFormData((prev) => ({ ...prev, Id_Caso: newId }));
+    };
+    fetchIdCaso();
     setDescripcion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
     setIntervencion((prev) => ({ ...prev, id_caso: formData.Id_Caso }));
   }, [formData.Id_Caso]);
@@ -78,7 +84,7 @@ const CaseForm = () => {
 
   return (
     <div className="rounded-xl shadow-md bg-white p-6 w-full">
-      <BasicInformation onChange={handleChange} />
+      <BasicInformation onChange={handleChange} idCaso={formData.Id_Caso} />
       <Actores setActores={setActores} idCaso={formData.Id_Caso} />
       <Descricription onChange={handleDescripcionChange} />
       <Evidencias setEvidencias={setEvidencias} idCaso={formData.Id_Caso} />

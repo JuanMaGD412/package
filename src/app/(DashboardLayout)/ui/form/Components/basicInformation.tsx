@@ -2,7 +2,7 @@
 import { Label, Select, TextInput } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
 
-const BasicInformation = ({ onChange }: { onChange: (e: any) => void }) => {
+const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, idCaso: string }) => {
   return (
     <div className="mb-6 border p-4 rounded-lg">
       <h5 className="text-lg font-bold mb-4">Datos generales del Caso</h5>
@@ -11,7 +11,7 @@ const BasicInformation = ({ onChange }: { onChange: (e: any) => void }) => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="Id_Caso" value="ID del Caso" />
-          <TextInput id="Id_Caso" name="Id_Caso" onChange={onChange} required />
+          <TextInput id="Id_Caso" name="Id_Caso" value={idCaso} readOnly />
         </div>
         <div>
           <Label htmlFor="fecha_caso" value="Fecha del caso" />
