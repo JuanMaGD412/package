@@ -21,19 +21,19 @@ const Actores = ({ setActores, idCaso }) => {
   };
 
   const onVincular = (estudiante) => {
-    const nombreCompletoEstudiante = `${estudiante.Nombre} ${estudiante.Apellido1} ${estudiante.Apellido2}`;
-    const nombreCompletoAcudiente = `${estudiante.NombreAcudiente} ${estudiante.Apellido1Acudiente} ${estudiante.Apellido2Acudiente}`;
+    const nombreCompletoEstudiante = `${estudiante.nombre} ${estudiante.apellido1} ${estudiante.apellido2}`;
+    const nombreCompletoAcudiente = `${estudiante.nombreacudiente} ${estudiante.apellido1acudiente} ${estudiante.apellido2acudiente}`;
   
     const nuevoEstudiante = {
       id_caso: idCaso,
       id: estudiante.id,
       nombre_completo: nombreCompletoEstudiante,
-      tipo_documento: estudiante.TipoDocumento,
-      documento_id: estudiante.DocumentoId,
+      tipo_documento: estudiante.tipodocumento,
+      documento_id: estudiante.documentoid,
       rol: "",
       nombre_acudiente: nombreCompletoAcudiente,
-      telefono_acudiente: estudiante.TelefonoAcudiente,
-      email_acudiente: estudiante.EmailAcudiente,
+      telefono_acudiente: estudiante.telefonoacudiente,
+      email_acudiente: estudiante.emailacudiente,
     };
     
   

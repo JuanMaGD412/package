@@ -1,20 +1,16 @@
-// lib/db.js
 import pkg from 'pg';
 const { Pool } = pkg;
 
-let pool;
-
-if (!global.pgPool) {
-  global.pgPool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    max: 10,
-  });
-  global.pgPool = pool;
-} else {
-  pool = global.pgPool;
-}
+const pool = new Pool({
+  host: 'db.mepqgipnicweghojgycb.supabase.co',
+  user: 'postgres',
+  password: 'libroverde412',
+  database: 'postgres',
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  max: 10,
+});
 
 export default pool;
