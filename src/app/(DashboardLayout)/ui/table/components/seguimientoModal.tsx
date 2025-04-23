@@ -10,7 +10,7 @@ interface SeguimientoModalProps {
   isOpen: boolean;
   onClose: () => void;
   caseData: {
-    Id_Caso: string;
+    id_caso: string;
     tipo_caso: string;
   } | null;
 }
@@ -27,13 +27,13 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
   }, []);
 
   const handleGuardar = async () => {
-    if (!caseData?.Id_Caso) {
+    if (!caseData?.id_caso) {
       alert("No se ha seleccionado un caso válido.");
       return;
     }
   
     const resultado = await guardarSeguimiento(
-      caseData.Id_Caso,
+      caseData.id_caso,
       responsable,
       fechaActual,
       observacion,
@@ -64,7 +64,7 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
           {/* Info del caso */}
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-sm text-gray-600">
-              Caso seleccionado: <strong>{caseData?.Id_Caso}</strong>
+              Caso seleccionado: <strong>{caseData?.id_caso}</strong>
             </p>
             <p className="text-sm text-gray-600">
               Tipo: <strong>{caseData?.tipo_caso}</strong>

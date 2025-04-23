@@ -1,173 +1,96 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Select } from "flowbite-react";
 import { ApexOptions } from "apexcharts";
+import { fetchCases } from "../../api/fetchCase/fetchCase"; // Ajusta la ruta si es diferente
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const RevenueForecast = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("This Week");
+const CasesStatusChart = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState("Semana");
+  const [casesData, setCasesData] = useState<any[]>([]);
 
-  const getChartData = (period: string) => {
-    switch (period) {
-      case "April 2024":
-        return {
-          series: [
-            {
-              name: "2024",
-              data: [2.5, 3.0, 2.8, 3.2, 2.9, 3.1, 2.7, 2.8, 3.0],
-            },
-            {
-              name: "2023",
-              data: [-1.5, -1.2, -1.8, -2.0, -1.7, -1.9, -2.1, -1.6, -1.8],
-            },
-          ],
-        };
-      case "May 2024":
-        return {
-          series: [
-            {
-              name: "2024",
-              data: [2.7, 2.9, 2.6, 3.1, 3.0, 2.8, 2.9, 3.2, 3.1],
-            },
-            {
-              name: "2023",
-              data: [-1.4, -1.3, -1.9, -1.7, -1.8, -2.0, -1.9, -1.8, -2.1],
-            },
-          ],
-        };
-      case "June 2024":
-        return {
-          series: [
-            {
-              name: "2024",
-              data: [3.0, 3.2, 3.1, 3.5, 3.4, 3.3, 3.2, 3.4, 3.6],
-            },
-            {
-              name: "2023",
-              data: [-1.6, -1.7, -1.8, -2.0, -1.9, -1.8, -1.7, -1.9, -2.0],
-            },
-          ],
-        };
-      case "This Week":
-      default:
-        return {
-          series: [
-            {
-              name: "2024",
-              data: [1.2, 2.7, 1.0, 3.6, 2.1, 2.7, 2.2, 1.3, 2.5],
-            },
-            {
-              name: "2023",
-              data: [-2.8, -1.1, -2.5, -1.5, -2.3, -1.9, -1.0, -2.1, -1.3],
-            },
-          ],
-        };
-    }
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchCases();
+      setCasesData(data);
+    };
+    loadData();
+  }, []);
+
+  const filterCasesByPeriod = (period: string) => {
+    const now = new Date();
+    return casesData.filter((caso) => {
+      const fecha = new Date(caso.fecha_caso);
+      if (period === "Semana") {
+        const start = new Date(now);
+        start.setDate(now.getDate() - 7);
+        return fecha >= start && fecha <= now;
+      }
+      if (period === "Mes") {
+        return fecha.getMonth() === now.getMonth() && fecha.getFullYear() === now.getFullYear();
+      }
+      if (period === "Año") {
+        return fecha.getFullYear() === now.getFullYear();
+      }
+      return true;
+    });
   };
 
-  const optionsBarChart: ApexOptions = {
+  const getChartData = (period: string) => {
+    const filtered = filterCasesByPeriod(period);
+
+    const abiertos = filtered.filter(c => c.estado === "abierto").length;
+    const cerrados = filtered.filter(c => c.estado === "cerrado").length;
+    const seguimiento = filtered.filter(c => c.estado === "en seguimiento").length;
+
+    return {
+      series: [{
+        name: "Casos",
+        data: [abiertos, seguimiento, cerrados],
+      }],
+    };
+  };
+
+  const options: ApexOptions = {
     chart: {
-      offsetX: 0,
-      offsetY: 10,
-      stacked: true,
-      animations: {
-        speed: 500,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["var(--color-primary)", "var(--color-error)"],
-    dataLabels: {
-      enabled: false,
-    },
-    grid: {
-      show: true,
-      borderColor: "#90A4AE50",
-      xaxis: {
-        lines: {
-          show: true
-        }
-      },
-      yaxis: {
-        lines: {
-          show: true
-        }
-      },
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
+      type: "bar",
+      toolbar: { show: false },
     },
     plotOptions: {
       bar: {
-        horizontal: false,
-        barHeight: "60%",
-        columnWidth: "15%",
-        borderRadius: 5,
-        borderRadiusApplication: "end",
-        borderRadiusWhenStacked: "all",
+        borderRadius: 4,
+        columnWidth: "45%",
       },
+    },
+    dataLabels: {
+      enabled: true,
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
+      categories: ["Abiertos", "En seguimiento", "Cerrados"],
     },
-    yaxis: {
-      min: -4,
-      max: 4,
-      tickAmount: 4,
-    },
-    legend: {
-      show: false,
-    },
+    colors: ["#3B82F6"], // azul
     tooltip: {
       theme: "dark",
     },
   };
 
-  const barChartData = getChartData(selectedPeriod);
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedPeriod(event.target.value);
-  };
+  const chartData = getChartData(selectedPeriod);
 
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <div className="flex justify-between items-center">
-        <h5 className="card-title">Revenue Forecast</h5>
-        <Select
-          id="periods"
-          className="select-md"
-          value={selectedPeriod}
-          onChange={handleSelectChange}
-          required
-        >
-          <option value="This Week">This Week</option>
-          <option value="April 2024">April 2024</option>
-          <option value="May 2024">May 2024</option>
-          <option value="June 2024">June 2024</option>
+      <div className="flex justify-between items-center mb-4">
+        <h5 className="card-title">Estado de los Casos</h5>
+        <Select value={selectedPeriod} onChange={(e) => setSelectedPeriod(e.target.value)}>
+          <option value="Semana">Esta Semana</option>
+          <option value="Mes">Este Mes</option>
+          <option value="Año">Este Año</option>
         </Select>
       </div>
-
-      <div className="-ms-4 -me-3 mt-2">
-        <Chart
-          options={optionsBarChart}
-          series={barChartData.series}
-          type="bar"
-          height="315px"
-          width="100%"
-        />
-      </div>
+      <Chart options={options} series={chartData.series} type="bar" height="300px" />
     </div>
   );
 };
 
-export default RevenueForecast;
+export default CasesStatusChart;

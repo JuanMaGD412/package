@@ -27,12 +27,12 @@ export const fetchCases = async () => {
   
       const casesWithDetails = casesData.map((caso) => ({
         ...caso,
-        actores: actoresData.filter((a) => a.Id_Caso === caso.Id_Caso),
-        descripcion: descripcionesData.find((d) => d.id_caso === caso.Id_Caso),
-        evidencias: evidenciasData.filter((e) => e.id_caso === caso.Id_Caso),
-        intervencion: intervencionesData.find((i) => i.id_caso === caso.Id_Caso),
-        rutaAtencion: rutaData.find((r) => r.id_caso === caso.Id_Caso),
-        seguimiento: seguimientoData.find((s) => s.id_caso === caso.Id_Caso),
+        actores: actoresData.filter((a) => a.id_caso === caso.id_caso),
+        descripcion: descripcionesData.find((d) => d.id_caso === caso.id_caso),
+        evidencias: evidenciasData.filter((e) => e.id_caso === caso.id_caso),
+        intervencion: intervencionesData.find((i) => i.id_caso === caso.id_caso),
+        rutaAtencion: rutaData.find((r) => r.id_caso === caso.id_caso),
+        seguimiento: seguimientoData.find((s) => s.id_caso === caso.id_caso),
       }));
   
       return casesWithDetails;

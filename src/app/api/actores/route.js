@@ -29,7 +29,7 @@ export async function POST(req) {
 
     const sql = `
       INSERT INTO actores 
-      (Id_Caso, rol, nombre_completo, tipo_documento, documento_id, 
+      (id_caso, rol, nombre_completo, tipo_documento, documento_id, 
        nombre_acudiente, telefono_acudiente, email_acudiente) 
       VALUES ${placeholders.join(", ")}
     `;

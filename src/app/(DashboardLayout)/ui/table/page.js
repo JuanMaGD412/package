@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Dropdown, Modal, Table, TextInput, Pagination } from "flowbite-react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Icon } from "@iconify/react";
-import { fetchCases } from "./funciones/fetchCase";
+import { fetchCases } from "../../../api/fetchCase/fetchCase";
 import CaseDetailsModal from "./components/caseDetailsModal";
 import SeguimientoModal from "./components/seguimientoModal";
 
@@ -16,13 +16,15 @@ const CasesTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const casesPerPage = 10;
 
+  const fetchData = async () => {
+    const data = await fetchCases();
+    setCases(data);
+  };
+  
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchCases();
-      setCases(data);
-    };
     fetchData();
   }, []);
+  
 
   const openModal = (caso) => {
     setSelectedCase(caso);
@@ -82,8 +84,8 @@ const CasesTable = () => {
           <Table.Body className="divide-y">
             {paginatedCases.length > 0 ? (
               paginatedCases.map((item) => (
-                <Table.Row key={item.Id_Caso}>
-                  <Table.Cell>{item.Id_Caso}</Table.Cell>
+                <Table.Row key={item.id_caso}>
+                  <Table.Cell>{item.id_caso}</Table.Cell>
                   <Table.Cell>{new Date(item.fecha_caso).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>{item.tipo_caso}</Table.Cell>
                   <Table.Cell>

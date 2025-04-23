@@ -23,7 +23,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
     <Modal show={isOpen} onClose={onClose} size="3xl" className="max-w-7xl">
 
       <Modal.Header className="bg-blue-600 text-white py-4 rounded-t-lg">
-        <h3 className="text-lg font-semibold">Detalles del Caso #{caseData.Id_Caso}</h3>
+        <h3 className="text-lg font-semibold">Detalles del Caso #{caseData.id_caso}</h3>
       </Modal.Header>
       <Modal.Body className="p-6 bg-gray-50">
         <div className="space-y-4">
@@ -37,7 +37,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
                 <Label value="ID del Caso" />
-                <TextInput value={caseData.Id_Caso} readOnly />
+                <TextInput value={caseData.id_caso} readOnly />
               </div>
               <div>
                 <Label value="Fecha del Caso" />
@@ -69,53 +69,58 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
           <div className="mb-6 border p-6 rounded-lg shadow-md bg-gray-50">
             <h5 className="text-xl font-bold text-gray-700">Actores Involucrados</h5>
             <Separator className="my-4" />
-
-            {caseData.actores.map((actor, index) => (
-              <div key={index} className="mb-6 border p-6 rounded-lg shadow bg-white">
-                <h6 className="text-lg font-semibold text-gray-700">
-                  {actor.rol === "afectado" ? `Estudiante afectado ${index + 1}` : `Estudiante implicado ${index + 1}`}
-                </h6>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                  <TextInput type="text" placeholder="Nombres" required value={actor.nombre || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Apellido 1" required value={actor.apellido1 || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Apellido 2" required value={actor.apellido2 || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Tipo de documento" required value={actor.tipo_documento || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Número de documento" required value={actor.documento_id || ""} readOnly className="rounded-md border-gray-300" />
-                </div>
-                <h6 className="text-md font-semibold text-gray-600 mt-6">Acudiente</h6>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                  <TextInput type="text" placeholder="Nombres" required value={actor.nombre_acudiente || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Apellido 1" required value={actor.apellido1_acudiente || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Apellido 2" required value={actor.apellido2_acudiente || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="text" placeholder="Número de teléfono" required value={actor.telefono_acudiente || ""} readOnly className="rounded-md border-gray-300" />
-                  <TextInput type="email" placeholder="Correo electrónico" required value={actor.email_acudiente || ""} readOnly className="rounded-md border-gray-300" />
-                </div>
-              </div>
-            ))}
+            <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+                    <thead className="bg-gray-100 border-b border-gray-300 text-xs uppercase font-semibold">
+                      <tr>
+                        <th className="px-4 py-3">Rol</th>
+                        <th className="px-4 py-3">Nombre completo</th>
+                        <th className="px-4 py-3">Tipo Documento</th>
+                        <th className="px-4 py-3">Número Documento</th>
+                        <th className="px-4 py-3">Acudiente</th>
+                        <th className="px-4 py-3">Teléfono</th>
+                        <th className="px-4 py-3">Email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {caseData.actores.map((actor, index) => (
+                        <tr key={actor.id}className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                          <td className="px-4 py-3">{actor.rol || ""}</td>
+                          <td className="px-4 py-3">{actor.nombre_completo || ""}</td>
+                          <td className="px-4 py-3">{actor.tipo_documento || ""}</td>
+                          <td className="px-4 py-3">{actor.documento_id || ""}</td>
+                          <td className="px-4 py-3">{actor.nombre_acudiente || ""}</td>
+                          <td className="px-4 py-3">{actor.telefono_acudiente || ""}</td>
+                          <td className="px-4 py-3">{actor.email_acudiente || ""}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+            </div>
           </div>
           {/* Evidencias */}
           <div className="p-4 bg-white rounded-lg shadow">
             <h5 className="text-lg font-semibold border-b pb-2">Evidencias</h5>
-            <Table className="mt-4 border rounded-lg">
-              <Table.Head>
-                <Table.HeadCell>Descripción</Table.HeadCell>
-                <Table.HeadCell>Tipo</Table.HeadCell>
-                <Table.HeadCell>Tamaño</Table.HeadCell>
-                <Table.HeadCell>Acciones</Table.HeadCell>
-              </Table.Head>
-              <Table.Body>
-                {caseData.evidencias.map((evidence, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>{evidence.descripcion || "Sin descripción"}</Table.Cell>
-                    <Table.Cell>{evidence.tipo_archivo || "Desconocido"}</Table.Cell>
-                    <Table.Cell>{evidence.tamano_archivo} MB</Table.Cell>
-                    <Table.Cell>
-                      <Button size="xs" color="green" onClick={() => downloadEvidence(evidence.file)}>Descargar</Button>
-                    </Table.Cell>
-                  </Table.Row>
+            <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+              <thead className="bg-gray-100 border-b border-gray-300 text-xs uppercase font-semibold">
+                <tr>
+                  <th className="px-4 py-3">Descripción</th>
+                  <th className="px-4 py-3">Tipo</th>
+                  <th className="px-4 py-3">Tamaño</th>
+                  <th className="px-4 py-3">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {caseData.evidencias.map((evidencia, index) => (
+                    <tr key={evidencia.id}className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="px-4 py-3">{evidencia.descripcion || "Sin descripción"}</td>
+                      <td className="px-4 py-3">{evidencia.tipo_archivo || "Desconocido"}</td>
+                      <td className="px-4 py-3">{evidencia.tamano_archivo}</td>
+                      <td className="px-4 py-3"><Button size="xs" color="green" onClick={() => downloadEvidence(evidencia.file)}>Descargar</Button></td>
+                    </tr>
                 ))}
-              </Table.Body>
-            </Table>
+              </tbody>
+            </table>
           </div>
           {/* Intervención y decisión */}
           <div className="mb-6 border p-6 rounded-xl shadow-lg bg-white">

@@ -6,8 +6,8 @@ export async function POST(req) {
     const { Id_Caso, fecha_caso, tipo_caso, es_confidencial } = await req.json();
 
     const result = await pool.query(
-      "INSERT INTO casos (Id_Caso, fecha_caso, tipo_caso, es_confidencial) VALUES ($1, $2, $3, $4) RETURNING id",
-      [Id_Caso, fecha_caso, tipo_caso, es_confidencial === "true"]
+      "INSERT INTO casos (id_caso, fecha_caso, tipo_caso, es_confidencial) VALUES ($1, $2, $3, $4) RETURNING id",
+      [Id_Caso, fecha_caso, tipo_caso, es_confidencial === "true" ? 1 : 0]
     );
 
     return NextResponse.json({ message: "Caso guardado exitosamente", insertId: result.rows[0].id }, { status: 201 });
