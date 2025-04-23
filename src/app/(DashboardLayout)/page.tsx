@@ -1,10 +1,7 @@
 import React from "react";
 import SalesProfit from "../components/dashboard/RevenueForecast";
-import NewCustomers from "../components/dashboard/NewCustomers";
-import TotalIncome from "../components/dashboard/TotalIncome";
 import ProductRevenue from "../components/dashboard/ProductRevenue";
 import DailyActivity from "../components/dashboard/DailyActivity";
-import BlogCards from "../components/dashboard/BlogCards";
 import Link from "next/link";
 
 const page = () => {

@@ -1,8 +1,28 @@
 "use client";
 import { Label, Select, TextInput } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, idCaso: string }) => {
+  const [fechaError, setFechaError] = useState("");
+
+  const todayStr = new Date().toISOString().split("T")[0];
+
+  const handleFechaChange = (e: any) => {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      setFechaError("La fecha del caso no puede ser posterior al día de hoy.");
+      alert("Por favor selecciona una fecha de hoy o anterior.");
+    } else {
+      setFechaError("");
+    }
+
+    onChange(e);
+  };
+
   return (
     <div className="mb-6 border p-4 rounded-lg">
       <h5 className="text-lg font-bold mb-4">Datos generales del Caso</h5>
@@ -15,7 +35,15 @@ const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, id
         </div>
         <div>
           <Label htmlFor="fecha_caso" value="Fecha del caso" />
-          <TextInput id="fecha_caso" name="fecha_caso" type="date" onChange={onChange} required />
+          <TextInput
+            id="fecha_caso"
+            name="fecha_caso"
+            type="date"
+            max={todayStr}
+            onChange={handleFechaChange}
+            required
+          />
+          {fechaError && <p className="text-red-500 text-sm mt-1">{fechaError}</p>}
         </div>
         <div>
           <Label htmlFor="tipo_caso" value="Tipo de caso" />
