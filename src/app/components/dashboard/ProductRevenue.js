@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Select, Label, Card, Spinner } from "flowbite-react";
 import { fetchCases } from "../../../app/api/fetchCase/fetchCase";
-import { getStudentInfo } from "../../api/comunidad/filtroDocumento/getStudentInfo"; // Ajusta esta ruta según tu estructura
+import { getStudentInfo } from "../../api/comunidad/filtroDocumento/getStudentInfo"; 
 
 const CaseRanking = () => {
   const [cases, setCases] = useState([]);
@@ -37,14 +37,13 @@ const CaseRanking = () => {
                 nombre: actor.nombre_completo,
                 casos: 0,
               };
-              documentMap[key] = true; // registrar documento para posterior consulta
+              documentMap[key] = true;
             }
             roleMap[key].casos += 1;
           }
         });
       });
 
-      // Buscar info adicional en paralelo
       const documentos = Object.keys(documentMap);
       const studentInfos = await Promise.all(
         documentos.map((doc) => getStudentInfo(doc))

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Select } from "flowbite-react";
 import { ApexOptions } from "apexcharts";
-import { fetchCases } from "../../api/fetchCase/fetchCase"; // Ajusta la ruta si es diferente
+import { fetchCases } from "../../api/fetchCase/fetchCase";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
