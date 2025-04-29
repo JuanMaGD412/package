@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server"; // Ajusta si tu ruta es distinta
+import { createClient } from "../../../../utils/supabase/server"; // Ajusta si tu ruta es distinta
 
 export async function POST(req) {
   const supabase = createClient();
