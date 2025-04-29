@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
+"use client";
 import { Label, Select, TextInput } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
