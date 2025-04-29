@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
-import pool from "../../../../lib/db";
+import { createClient } from "@/utils/supabase/server"; // ajusta la ruta si es diferente
 
 export async function GET() {
+  const supabase = createClient();
+
   try {
-    const result = await pool.query("SELECT id_caso FROM casos ORDER BY id DESC LIMIT 1");
-    const lastId = result.rows.length > 0 ? result.rows[0].id_caso : null;
+    const { data, error } = await supabase
+      .from("casos")
+      .select("id_caso")
+      .order("id", { ascending: false })
+      .limit(1);
+
+    if (error) throw error;
+
+    const lastId = data.length > 0 ? data[0].id_caso : null;
     return NextResponse.json({ lastId });
   } catch (error) {
     console.error("Error al obtener el último Id_Caso:", error);
