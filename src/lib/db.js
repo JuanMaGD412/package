@@ -2,8 +2,8 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 const pool = new Pool({
-  host: 'db.mepqgipnicweghojgycb.supabase.co',
-  user: 'postgres',
+  host: 'aws-0-us-east-1.pooler.supabase.com',
+  user: 'postgres.mepqgipnicweghojgycb',
   password: 'libroverde412',
   database: 'postgres',
   port: 5432,
@@ -12,5 +12,6 @@ const pool = new Pool({
   },
   max: 10,
 });
+
 
 export default pool;

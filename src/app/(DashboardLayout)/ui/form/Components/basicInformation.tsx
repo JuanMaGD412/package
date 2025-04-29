@@ -1,12 +1,23 @@
 "use client";
 import { Label, Select, TextInput } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, idCaso: string }) => {
   const [fechaError, setFechaError] = useState("");
+  const [opciones, setOpciones] = useState<any>({});
 
   const todayStr = new Date().toISOString().split("T")[0];
+
+  useEffect(() => {
+    const fetchOpciones = async () => {
+      const res = await fetch("../../../../api/listas");
+      const data = await res.json();
+      setOpciones(data);
+    };
+
+    fetchOpciones();
+  }, []);
 
   const handleFechaChange = (e: any) => {
     const selectedDate = new Date(e.target.value);
@@ -49,8 +60,10 @@ const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, id
           <Label htmlFor="tipo_caso" value="Tipo de caso" />
           <Select id="tipo_caso" name="tipo_caso" onChange={onChange} required>
             <option value="">Seleccione un tipo</option>
-            <option value="salud">Situación de salud</option>
-            <option value="disciplinario">Disciplinario</option>
+            {/* Cargar dinámicamente las opciones */}
+            {opciones.tipo_caso && opciones.tipo_caso.map((tipo: string, index: number) => (
+              <option key={index} value={tipo}>{tipo}</option>
+            ))}
           </Select>
         </div>
         <div>
@@ -60,7 +73,7 @@ const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, id
               <input type="radio" name="es_confidencial" value="true" onChange={onChange} /> Sí
             </label>
             <label>
-              <input type="radio" name="es_confidencial" value="false" onChange={onChange} /> No
+              <input type="radio" name="es_confidencial" value="false" defaultChecked onChange={onChange} /> No
             </label>
           </div>
         </div>

@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from "react";
 
 const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
-  const [rutaAtencion, setRutaAtencion] = useState(null);
+  const [rutaAtencion, setRutaAtencion] = useState(false);
   const [tipoRemision, setTipoRemision] = useState("");
   const [fecha, setFecha] = useState("");
   const [remitido, setRemitido] = useState("");
   const [institucion, setInstitucion] = useState("");
   const [contacto, setContacto] = useState("");
   const [observaciones, setObservaciones] = useState("");
+  
   
   useEffect(() => {
     const rutaAtencionData = {
@@ -33,7 +34,7 @@ const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
           <input type="radio" name="rutaAtencion" value="true" checked={rutaAtencion === true} onChange={() => setRutaAtencion(true)} /> Sí
         </label>
         <label className="flex items-center gap-1 cursor-pointer">
-          <input type="radio" name="rutaAtencion" value="false" checked={rutaAtencion === false} onChange={() => setRutaAtencion(false)} /> No
+          <input type="radio" name="rutaAtencion" value="false" checked={rutaAtencion === false}  onChange={() => setRutaAtencion(false)} /> No
         </label>
       </div>
       {rutaAtencion === true && (
