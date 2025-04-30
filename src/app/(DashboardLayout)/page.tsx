@@ -29,7 +29,14 @@ const page = () => {
               target="_blank"
               className="pl-1 text-primary underline decoration-primary"
             >
-              prosecto.com.co
+              Prosecto
+            </Link>
+            <Link
+              href="https://store.goldbots.com/?srsltid=AfmBOopY5YnUn0Ucm3qJxgpgl15onH27A0cWMOxVDIF83mrHpQWFPOKs"
+              target="_blank"
+              className="pl-1 text-primary underline decoration-primary"
+            >
+              GoldBots
             </Link>
           </p>
         </div>
