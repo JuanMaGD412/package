@@ -16,16 +16,16 @@ export async function POST(req) {
     `;
 
     const result = await pool.query(sql, [
-      id_caso, 
-      tipoDecision || null, 
-      decisionComite || null, 
-      compromisos || null, 
-      fechaCompromiso || null
+      id_caso,
+      tipoDecision ?? '',
+      decisionComite ?? '',
+      Array.isArray(compromisos) ? JSON.stringify(compromisos) : '[]',
+      fechaCompromiso ?? null
     ]);
 
-    return NextResponse.json({ 
-      message: "Intervención guardada exitosamente", 
-      rowCount: result.rowCount 
+    return NextResponse.json({
+      message: "Intervención guardada exitosamente",
+      rowCount: result.rowCount
     }, { status: 201 });
 
   } catch (error) {
@@ -39,7 +39,7 @@ export async function GET() {
     const result = await pool.query("SELECT * FROM intervenciones");
     return NextResponse.json(result.rows, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener los casos:", error);
+    console.error("Error al obtener las intervenciones:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

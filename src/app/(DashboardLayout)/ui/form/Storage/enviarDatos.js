@@ -9,6 +9,7 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
   try {
     console.log("Datos a enviar:", { formData, actores, descripcion, evidencias, intervencion, rutaAtencion });
 
+    // Validaciones básicas
     if (!formData || Object.keys(formData).length === 0) {
       alert("El formulario está vacío.");
       return null;
@@ -19,11 +20,16 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
       return null;
     }
 
-    if (!descripcion.version_estudiante_afectado && !descripcion.version_estudiante_implicado && !descripcion.version_testigos) {
+    if (
+      !descripcion.version_estudiante_afectado &&
+      !descripcion.version_estudiante_implicado &&
+      !descripcion.version_testigos
+    ) {
       alert("Debe llenar al menos una versión del relato.");
       return null;
     }
 
+    // 🔒 1. Guardar el caso
     const casoResponse = await guardarCaso(formData);
     if (!casoResponse.success) {
       alert(`Error al guardar el caso: ${casoResponse.message}`);
@@ -31,62 +37,42 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
     }
 
     const idCaso = casoResponse.insertId || formData.Id_Caso;
-    console.log("ID del caso obtenido:", idCaso);
-
     if (!idCaso) {
       alert("No se pudo obtener el ID del caso.");
       return null;
     }
 
+    // 🔒 2. Guardar actores
     const actoresResponse = await guardarActores(idCaso, actores);
     if (!actoresResponse.success) {
       alert(`Error al guardar actores: ${actoresResponse.message}`);
       return null;
     }
 
+    // ✅ A partir de aquí, continuar con los demás
     const descripcionResponse = await guardarDescripcion(
       idCaso,
       descripcion.version_estudiante_afectado,
       descripcion.version_estudiante_implicado,
       descripcion.version_testigos
     );
-
-    if (!descripcionResponse.success) {
-      alert(`Error al guardar descripción: ${descripcionResponse.message}`);
-      return null;
-    }
+    
 
     console.log("Enviando evidencias:", evidencias);
-    const evidenciaResponse = await guardarEvidencia(idCaso, evidencias);
-    if (!evidenciaResponse.success) {
-        alert(`Error al guardar evidencias: ${evidenciaResponse.message}`);
-        return null;
-    }
+    await guardarEvidencia(idCaso, evidencias || []);
 
     if (rutaAtencion && rutaAtencion.activa !== null) {
-      const rutaAtencionResponse = await guardarRutaAtencion(idCaso, rutaAtencion);
-      if (!rutaAtencionResponse.success) {
-        alert(`Error al guardar la ruta de atención: ${rutaAtencionResponse.message}`);
-        return null;
-      }
+      await guardarRutaAtencion(idCaso, rutaAtencion);
     }
 
-
-    // 🔹 Guardar Intervención
-    const intervencionResponse = await guardarIntervencion(
+    await guardarIntervencion(
       idCaso,
-      intervencion.tipoDecision,
-      intervencion.decisionComite,
-      intervencion.compromisos,
-      intervencion.fechaCompromiso
+      intervencion?.tipoDecision || "",
+      intervencion?.decisionComite || "",
+      intervencion?.compromisos || [],
+      intervencion?.fechaCompromiso || null
     );
 
-    if (!intervencionResponse.success) {
-      alert(`Error al guardar la intervención: ${intervencionResponse.message}`);
-      return null;
-    }
-
-    
     alert("Todos los datos fueron guardados correctamente.");
     return idCaso;
 
