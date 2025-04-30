@@ -10,6 +10,8 @@ const Actores = ({ setActores, idCaso }) => {
   const [studentsGrade, setStudentsGrade] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState("");
+  const [allGrades, setAllGrades] = useState([]);
+
 
   const openModal = (grade) => {
     setSelectedGrade(grade);
@@ -51,11 +53,31 @@ const Actores = ({ setActores, idCaso }) => {
       )
     );
   };
+
+  const filteredGrades = allGrades.filter((grado) =>
+    grado.toLowerCase().includes(studentsGrade.toLowerCase())
+  );
+  
   
 
   useEffect(() => {
   setActores(students);
 }, [students]);
+
+useEffect(() => {
+  const fetchGrados = async () => {
+    try {
+      const response = await fetch("../../../../api/comunidad/gradoAyuda");
+      const data = await response.json();
+      setAllGrades(data);
+    } catch (error) {
+      console.error("Error al obtener grados:", error);
+    }
+  };
+
+  fetchGrados();
+}, []);
+
 
   return (
     <div className="mb-6 border p-6 rounded-xl shadow-sm bg-white">
@@ -63,10 +85,29 @@ const Actores = ({ setActores, idCaso }) => {
     <Separator className="my-4" />
   
     <div className="flex items-center gap-4 mb-6">
-      <TextInput type="text" placeholder="Buscar por grado(Salón)"value={studentsGrade}onChange={(e) => setStudentsGrade(e.target.value)} className="w-48"/>
-      <Button color="gray" onClick={() => openModal(studentsGrade)} className="p-0">
-        <IoSearchCircle size={36} className="text-blue-600 hover:text-blue-800 transition" />
-      </Button>
+    <div className="relative w-48">
+      <TextInput type="text"
+        placeholder="Buscar por grado (Salón)"
+        value={studentsGrade}
+        onChange={(e) => setStudentsGrade(e.target.value)}
+        className="w-full"/> {studentsGrade && filteredGrades.length > 0 && (
+        <ul className="absolute z-10 bg-white border border-gray-300 w-full rounded mt-1 shadow max-h-40 overflow-y-auto">
+          {filteredGrades.map((grado, index) => (
+            <li
+              key={index}
+              className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+              onClick={() => {
+                setStudentsGrade(grado);
+                openModal(grado.toUpperCase());
+              }}
+            >
+              {grado}
+            </li>
+          ))}
+        </ul>)} </div>
+    <Button color="gray" onClick={() => openModal(studentsGrade.toUpperCase())} className="p-0">
+      <IoSearchCircle size={36} className="text-blue-600 hover:text-blue-800 transition" />
+    </Button>
     </div>
   
     <div className="overflow-x-auto">

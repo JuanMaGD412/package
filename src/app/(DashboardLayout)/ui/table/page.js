@@ -102,7 +102,7 @@ const CasesTable = () => {
                   <Table.Cell>{item.descripcion?.version_estudiante_afectado || "Sin descripción"}</Table.Cell>
                   <Table.Cell>
                     <Badge color={item.estado === "cerrado" ? "failure" : item.estado === "en seguimiento" ? "warning" : "green"}>
-                      {item.estado}
+                    {item.estado.charAt(0).toUpperCase() + item.estado.slice(1)}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>

@@ -35,7 +35,7 @@ const ModalEvidencias = ({ isOpen, onClose, newEvidence, setNewEvidence, addEvid
   };
 
   return (
-    <Modal show={isOpen} onClose={handleClose} size="md">
+    <Modal show={isOpen} onClose={handleClose} size="4xl">
       <Modal.Header>Agregar Evidencia</Modal.Header>
       <Modal.Body>
         <div>

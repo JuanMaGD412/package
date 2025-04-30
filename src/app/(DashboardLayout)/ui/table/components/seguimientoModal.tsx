@@ -57,9 +57,9 @@ const SeguimientoModal: React.FC<SeguimientoModalProps> = ({ isOpen, onClose, ca
   
 
   return (
-    <Modal show={isOpen} onClose={onClose} size="3xl" className="max-w-7xl">
+    <Modal show={isOpen} onClose={onClose} size="5xl">
       <Modal.Header className="bg-blue-600 text-white">Iniciar Seguimiento</Modal.Header>
-      <Modal.Body className="bg-gray-50">
+      <Modal.Body >
         <div className="space-y-4">
           {/* Info del caso */}
           <div className="bg-white p-4 rounded-lg shadow">

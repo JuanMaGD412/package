@@ -14,7 +14,7 @@ const ModalComunidad = ({ isOpen, onClose, selectedGrade, onVincular, actores })
   };
 
   return (
-    <Modal show={isOpen} onClose={onClose} size="lg">
+    <Modal show={isOpen} onClose={onClose} size="5xl">
       <Modal.Header>Comunidad del grado {selectedGrade}</Modal.Header>
       <Modal.Body>
         {loading && <p>Cargando...</p>}

@@ -20,16 +20,15 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
   };
 
   return (
-    <Modal show={isOpen} onClose={onClose} size="3xl" className="max-w-7xl">
+    <Modal show={isOpen} onClose={onClose} size="5xl">
 
       <Modal.Header className="bg-blue-600 text-white py-4 rounded-t-lg">
         <h3 className="text-lg font-semibold">Detalles del Caso #{caseData.id_caso}</h3>
       </Modal.Header>
       <Modal.Body className="p-6 bg-gray-50">
         <div className="space-y-4">
-          <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
-            <p className="text-md font-medium">Estado <span className="font-semibold"></span></p>
-            <span className={`px-3 py-1 rounded text-sm font-bold  ${caseData.estado === "cerrado" ? "bg-red-500 text-white" : caseData.estado === "en seguimiento" ? "bg-yellow-500 text-white" : "bg-green-500 text-white"}`}>{caseData.estado}</span>
+          <div>
+            <p className="font-semibold text-md font-medium text-right w-full">Estado: <span className={`px-3 py-1 rounded text-sm font-bold  ${caseData.estado === "cerrado" ? "bg-red-500 text-white" : caseData.estado === "en seguimiento" ? "bg-yellow-500 text-white" : "bg-green-500 text-white"}`}>{caseData.estado.charAt(0).toUpperCase() + caseData.estado.slice(1)}</span></p>
           </div>
           {/* Información general */}
           <div className="p-4 bg-white rounded-lg shadow">
