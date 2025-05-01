@@ -31,6 +31,7 @@ const page = () => {
             >
               Prosecto
             </Link>
+            &
             <Link
               href="https://store.goldbots.com/?srsltid=AfmBOopY5YnUn0Ucm3qJxgpgl15onH27A0cWMOxVDIF83mrHpQWFPOKs"
               target="_blank"

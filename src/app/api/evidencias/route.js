@@ -65,3 +65,13 @@ export async function POST(req) {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const result = await pool.query("SELECT * FROM evidencias");
+    return NextResponse.json(result.rows, { status: 200 });
+  } catch (error) {
+    console.error("Error al obtener evidencias:", error);
+    return NextResponse.json({ error: "Error al obtener evidencias" }, { status: 500 });
+  }
+}
