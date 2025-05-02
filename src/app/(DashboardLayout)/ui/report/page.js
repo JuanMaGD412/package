@@ -1,18 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
-import { CalendarDays, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { exportToPDF } from "@/utils/export/exportToPDF";
+
 
 export default function Reportes() {
   const [casos, setCasos] = useState([]);
   const [filtered, setFiltered] = useState([]);
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [estado, setEstado] = useState("");
   const [grupo, setGrupo] = useState("");
   const [gruposDisponibles, setGruposDisponibles] = useState([]);
+  const [filtroAplicado, setFiltroAplicado] = useState(false);
+
 
   useEffect(() => {
     fetchGrupos();
@@ -60,7 +63,6 @@ export default function Reportes() {
   
       const matchEstado = estado ? caso.estado === estado : true;
   
-      // Verifica si algún actor (afectado, implicado, testigo) tiene el grado seleccionado
       const matchGrupo = grupo
         ? caso.actores?.some((actor) => actor.grado === grupo)
         : true;
@@ -69,8 +71,8 @@ export default function Reportes() {
     });
   
     setFiltered(resultado);
+    setFiltroAplicado(true);
   };
-1  
 
   return (
     <div className="p-6">
@@ -140,7 +142,8 @@ export default function Reportes() {
 
       {/* Resultados */}
       <div className="mt-6">
-        {filtered.length > 0 ? (
+        {filtroAplicado && filtered.length > 0 && (
+          <>
           <table className="w-full text-left border mt-2">
             <thead className="bg-gray-100">
               <tr>
@@ -183,9 +186,22 @@ export default function Reportes() {
               ))}
             </tbody>
           </table>
-        ) : (
+
+          <button
+            onClick={() => exportToPDF(filtered)}
+            className="mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-full"
+          >
+            Exportar PDF
+          </button>
+
+          </>
+        )}
+
+        {filtroAplicado && filtered.length === 0 && (
           <p className="text-gray-500 mt-4">No se encontraron resultados.</p>
         )}
+        
+
       </div>
     </div>
   );
