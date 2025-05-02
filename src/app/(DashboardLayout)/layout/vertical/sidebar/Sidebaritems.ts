@@ -29,7 +29,7 @@ const SidebarContent: MenuItem[] = [
         name: "Dashboard",
         icon: "solar:widget-add-line-duotone",
         id: uniqueId(),
-        url: "/",
+        url: "/dashboard",
       },
     ],
   },
@@ -48,6 +48,17 @@ const SidebarContent: MenuItem[] = [
         id: uniqueId(),
         url: "/ui/table",
       },
+    ],
+  },
+  {
+    heading: "REPORT",
+    children: [
+      {
+        name: "Generar reportes",
+        icon: "solar:clipboard-linear",
+        id: uniqueId(),
+        url: "/ui/report",
+      }
     ],
   },
   {

@@ -19,7 +19,6 @@ const config: Config = {
 			lg: ['1.125rem', { lineHeight: '1.75rem' }],
 			xl: ['1.25rem', { lineHeight: '1.75rem' }],
 			'2xl': ['1.5rem', { lineHeight: '2rem' }],
-			// Puedes agregar personalizados también
 			tiny: ['0.625rem', { lineHeight: '1rem' }],
 			'15px': ['15px', { lineHeight: '22px' }],
 		},

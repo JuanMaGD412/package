@@ -1,7 +1,7 @@
 import React from "react";
-import SalesProfit from "../components/dashboard/RevenueForecast";
-import ProductRevenue from "../components/dashboard/ProductRevenue";
-import DailyActivity from "../components/dashboard/DailyActivity";
+import SalesProfit from "../../components/dashboard/RevenueForecast";
+import ProductRevenue from "../../components/dashboard/ProductRevenue";
+import DailyActivity from "../../components/dashboard/DailyActivity";
 import Link from "next/link";
 
 const page = () => {
@@ -29,15 +29,15 @@ const page = () => {
               target="_blank"
               className="pl-1 text-primary underline decoration-primary"
             >
-              Prosecto
+              Prosecto 
             </Link>
-             &
+             <a> & </a>
             <Link
               href="https://store.goldbots.com/?srsltid=AfmBOopY5YnUn0Ucm3qJxgpgl15onH27A0cWMOxVDIF83mrHpQWFPOKs"
               target="_blank"
               className="pl-1 text-primary underline decoration-primary"
             >
-              GoldBots
+            GoldBots
             </Link>
           </p>
         </div>
