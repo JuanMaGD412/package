@@ -74,6 +74,7 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
     );
 
     alert("Todos los datos fueron guardados correctamente.");
+    window.location.reload();
     return idCaso;
 
   } catch (error) {

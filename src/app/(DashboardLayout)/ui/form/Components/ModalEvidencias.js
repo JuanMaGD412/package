@@ -8,9 +8,14 @@ const ModalEvidencias = ({ isOpen, onClose, newEvidence, setNewEvidence, addEvid
   const handleFilePreview = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    setNewEvidence({ ...newEvidence, file });
-
+  
+    setNewEvidence({
+      ...newEvidence,
+      file,
+      size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+      name: file.name,
+    });
+  
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -21,6 +26,7 @@ const ModalEvidencias = ({ isOpen, onClose, newEvidence, setNewEvidence, addEvid
       setPreview(file.name);
     }
   };
+  
 
   const handleClose = () => {
     setPreview(null); 

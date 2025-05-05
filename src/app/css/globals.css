@@ -9,12 +9,17 @@
 
 
 @layer components {
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
   .container {
     @apply max-w-[1200px];
   }
-
+  
   body {
-    @apply text-xs overflow-x-hidden;
+    @apply text-xs bg-background text-foreground overflow-x-hidden;
   }
 
   .dropdown {
@@ -274,13 +279,4 @@
 
 /*---break---*/
 
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply text-xs bg-background text-foreground;
-  }
-}
 

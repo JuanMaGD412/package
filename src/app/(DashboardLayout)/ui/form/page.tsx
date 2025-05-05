@@ -83,7 +83,7 @@ const CaseForm = () => {
   };
 
   return (
-    <div className="rounded-xl shadow-md bg-white p-6 w-full">
+    <div className="rounded-xl shadow-md bg-white p-6  w-256 ">
       <BasicInformation onChange={handleChange} idCaso={formData.Id_Caso} />
       <Actores setActores={setActores} idCaso={formData.Id_Caso} />
       <Descricription onChange={handleDescripcionChange} />

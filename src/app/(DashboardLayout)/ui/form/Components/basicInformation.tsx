@@ -35,7 +35,7 @@ const BasicInformation = ({ onChange, idCaso }: { onChange: (e: any) => void, id
   };
 
   return (
-    <div className="mb-6 border p-4 rounded-lg">
+    <div className="mb-1 border p-4 rounded-lg shadow-sm bg-white w-320 scale-[0.75]  origin-left">
       <h5 className="text-lg font-bold mb-4">Datos generales del Caso</h5>
       <Separator className="my-4" />
 

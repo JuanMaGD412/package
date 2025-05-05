@@ -45,7 +45,13 @@ const Actores = ({ setActores, idCaso }) => {
     closeModal();
   };
   
-
+  const eliminarActor = (index) => {
+    const nuevosActores = [...students];
+    nuevosActores.splice(index, 1);
+    setStudents(nuevosActores);
+    setActores(nuevosActores);
+  };
+  
   const handleRolChange = (rol, index) => {
     setStudents((prevStudents) =>
       prevStudents.map((student, i) =>
@@ -80,7 +86,7 @@ useEffect(() => {
 
 
   return (
-    <div className="mb-6 border p-6 rounded-xl shadow-sm bg-white">
+    <div className="mb-1 border p-4 rounded-lg shadow-sm bg-white w-320 scale-[0.75]  origin-left">
     <h5 className="text-xl font-semibold text-gray-800 mb-4">Actores</h5>
     <Separator className="my-4" />
   
@@ -116,11 +122,11 @@ useEffect(() => {
           <tr>
             <th className="px-4 py-3">Rol</th>
             <th className="px-4 py-3">Nombre completo</th>
-            <th className="px-4 py-3">Tipo Documento</th>
-            <th className="px-4 py-3">Número Documento</th>
+            <th className="px-4 py-3">Documento</th>
             <th className="px-4 py-3">Acudiente</th>
             <th className="px-4 py-3">Teléfono</th>
             <th className="px-4 py-3">Email</th>
+            <th className="px-4 py-3">Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -139,11 +145,20 @@ useEffect(() => {
 
               </td>
               <td className="px-4 py-3">{student.nombre_completo}</td>
-              <td className="px-4 py-3">{student.tipo_documento}</td>
-              <td className="px-4 py-3">{student.documento_id}</td>
+              <td className="px-4 py-3">
+                {student.tipo_documento} - {student.documento_id}
+              </td>
               <td className="px-4 py-3">{student.nombre_acudiente}</td>
               <td className="px-4 py-3">{student.telefono_acudiente}</td>
               <td className="px-4 py-3">{student.email_acudiente}</td>
+              <td className="px-4 py-3">
+                <button
+                  onClick={() => eliminarActor(index)}
+                  className="text-red-600 hover:text-red-800 font-semibold"
+                >
+                  Eliminar
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

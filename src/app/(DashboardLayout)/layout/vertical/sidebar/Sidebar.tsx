@@ -12,12 +12,14 @@ import { Icon } from "@iconify/react";
 const SidebarLayout = () => {
   return (
     <>
-      <div className="xl:block hidden">
-        <div className="flex">
+      <div className="xl:block hidden text-sm">
+        <div className="flex origin-left">
           <Sidebar
-            className="fixed menu-sidebar pt-6 bg-white dark:bg-darkgray z-[10]"
+            className="fixed menu-sidebar pt-6 bg-white dark:bg-darkgray z-[10]  scale-[0.85] origin-top-left" // cambia el ancho aquí
             aria-label="Sidebar with multi-level dropdown example"
           >
+
+
             <div className="mb-7 px-6 brand-logo">
               <FullLogo />
             </div>

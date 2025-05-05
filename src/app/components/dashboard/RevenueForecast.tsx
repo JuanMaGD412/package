@@ -79,7 +79,8 @@ const CasesStatusChart = () => {
   const chartData = getChartData(selectedPeriod);
 
   return (
-    <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
+    <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-4 relative w-full break-words">
+
       <div className="flex justify-between items-center mb-4">
         <h5 className="card-title">Estado de los Casos</h5>
         <Select value={selectedPeriod} onChange={(e) => setSelectedPeriod(e.target.value)}>
@@ -88,7 +89,7 @@ const CasesStatusChart = () => {
           <option value="Año">Este Año</option>
         </Select>
       </div>
-      <Chart options={options} series={chartData.series} type="bar" height="300px" />
+      <Chart options={options} series={chartData.series} type="bar" height="250px" />
     </div>
   );
 };

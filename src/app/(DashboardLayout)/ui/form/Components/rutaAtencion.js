@@ -26,7 +26,7 @@ const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
   }, [idCaso, rutaAtencion, tipoRemision, fecha, remitido, institucion, contacto, observaciones]); 
 
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white">
+    <div className="mb-1 p-4 border rounded-lg shadow-md bg-white w-320 scale-[0.75]  origin-left">
       <h2 className="text-lg font-semibold mb-2">Ruta de atención</h2>
       <label className="block font-medium">¿Se activa ruta de atención?</label>
       <div className="flex gap-4 mt-2">

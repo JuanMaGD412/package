@@ -12,6 +12,16 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		width: {
+			'128': '32rem', // 512px
+			'160': '40rem', // 640px
+			'192': '48rem', // 768px
+			'224': '56rem', 
+			'256': '64rem', 
+			'288': '72rem', 
+			'320': '80rem', 
+			'352': '88rem', 
+		},
 		fontSize: {
 			xs: ['0.75rem', { lineHeight: '1rem' }],
 			sm: ['0.875rem', { lineHeight: '1.25rem' }],
