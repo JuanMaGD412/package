@@ -6,18 +6,25 @@ import { Separator } from "@/components/ui/separator";
 const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
   if (!caseData) return null;
 
-  const downloadEvidence = (file) => {
-    if (file) {
-      const url = URL.createObjectURL(file);
+  const downloadEvidence = async (url, fileName) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = file.name;
+      a.href = blobUrl;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl); // Limpia la URL
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
+      alert("No se pudo descargar el archivo.");
     }
   };
+  
+  
 
   return (
     <Modal show={isOpen} onClose={onClose} size="5xl">
@@ -111,12 +118,16 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
               </thead>
               <tbody>
                 {caseData.evidencias.map((evidencia, index) => (
-                    <tr key={evidencia.id}className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                      <td className="px-4 py-3">{evidencia.descripcion || "Sin descripción"}</td>
-                      <td className="px-4 py-3">{evidencia.tipo_archivo || "Desconocido"}</td>
-                      <td className="px-4 py-3">{evidencia.tamano_archivo}</td>
-                      <td className="px-4 py-3"><Button size="xs" color="green" onClick={() => downloadEvidence(evidencia.file)}>Descargar</Button></td>
-                    </tr>
+                  <tr key={evidencia.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                    <td className="px-4 py-3">{evidencia.descripcion || "Sin descripción"}</td>
+                    <td className="px-4 py-3">{evidencia.tipo_archivo || "Desconocido"}</td>
+                    <td className="px-4 py-3">{evidencia.tamano_archivo}</td>
+                    <td className="px-4 py-3">
+                      <Button size="xs" color="green" onClick={() => downloadEvidence(evidencia.url_archivo, evidencia.nombre_archivo)}>
+                        Descargar
+                      </Button>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
