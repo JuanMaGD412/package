@@ -61,7 +61,7 @@ export default function Reportes() {
         (!startDate || fechaCaso >= startDate) &&
         (!endDate || fechaCaso <= endDate);
   
-      const matchEstado = estado ? caso.estado === estado : true;
+        const matchEstado = estado ? caso.estado?.trim().toLowerCase() === estado.trim().toLowerCase() : true;
   
       const matchGrupo = grupo
         ? caso.actores?.some((actor) => actor.grado === grupo)
