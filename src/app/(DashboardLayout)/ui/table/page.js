@@ -55,7 +55,7 @@ const CasesTable = () => {
   const paginatedCases = filteredCases.slice((currentPage - 1) * casesPerPage, currentPage * casesPerPage);
 
   return (
-    <div className="rounded-xl shadow-md bg-white pt-6 px-6 pb-6 relative w-full break-words w-[62rem]">
+    <div className="rounded-xl shadow-md bg-white pt-6 px-6 pb-6 relative w-full break-words w-[63rem]">
       <div className="w-320 scale-[0.75] origin-top-left">
         <h5 className="text-lg font-semibold mt-0">Gestión de Casos de Convivencia</h5>
 

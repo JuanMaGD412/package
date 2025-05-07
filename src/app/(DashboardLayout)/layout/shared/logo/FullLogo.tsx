@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Logo from "/public/images/logos/prosecto.png";
+import Logo from "/public/images/logos/prosecto&goldbots.png";
 import Link from "next/link";
 const FullLogo = () => {
   return (
