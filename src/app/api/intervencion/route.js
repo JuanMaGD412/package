@@ -19,9 +19,10 @@ export async function POST(req) {
       id_caso,
       tipoDecision ?? '',
       decisionComite ?? '',
-      Array.isArray(compromisos) ? JSON.stringify(compromisos) : '[]',
+      compromisos ?? '',
       fechaCompromiso ?? null
     ]);
+    
 
     return NextResponse.json({
       message: "Intervención guardada exitosamente",
