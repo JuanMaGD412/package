@@ -61,7 +61,7 @@ const DailyActivity = () => {
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
       <h5 className="card-title mb-6">Compromisos recientes y vencidos</h5>
-      <div className="flex flex-col mt-2">
+      <div className="flex flex-col mt-2 max-h-80 overflow-y-auto pr-2">
         <ul>
           {activityData.map((item, index) => (
             <li key={index}>
@@ -83,6 +83,7 @@ const DailyActivity = () => {
           ))}
         </ul>
       </div>
+
     </div>
   );
 };

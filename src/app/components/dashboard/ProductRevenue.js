@@ -73,13 +73,12 @@ const CaseRanking = () => {
         .sort((a, b) => b.casos - a.casos);
 
       setRanking(sortedRanking);
-      setCurrentPage(1); // Resetear página al cambiar rol
+      setCurrentPage(1); // Resetear al cambiar de rol
     };
 
     fetchRanking();
   }, [cases, selectedRole]);
 
-  // Paginación
   const totalPages = Math.ceil(ranking.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = ranking.slice(startIndex, startIndex + itemsPerPage);
@@ -154,15 +153,27 @@ const CaseRanking = () => {
             </Table>
           </div>
 
-          {/* Controles de paginación */}
-          <div className="flex justify-between items-center mt-4">
+          {/* Controles de paginación mejorados */}
+          <div className="flex justify-between items-center mt-4 flex-wrap gap-4">
             <span className="text-sm text-gray-600">
               Página {currentPage} de {totalPages}
             </span>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button size="sm" disabled={currentPage === 1} onClick={handlePrevious}>
                 Anterior
               </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  size="sm"
+                  color={page === currentPage ? "primary" : "gray"}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </Button>
+              ))}
+
               <Button size="sm" disabled={currentPage === totalPages} onClick={handleNext}>
                 Siguiente
               </Button>
