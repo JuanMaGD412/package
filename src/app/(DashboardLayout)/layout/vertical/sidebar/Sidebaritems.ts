@@ -48,6 +48,12 @@ const SidebarContent: MenuItem[] = [
         id: uniqueId(),
         url: "/ui/table",
       },
+      {
+        name: "Editar caso",
+        icon: "solar:bedside-table-3-linear",
+        id: uniqueId(),
+        url: "/ui/editCase",
+      },
     ],
   },
   {

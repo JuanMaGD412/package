@@ -59,9 +59,9 @@ const DailyActivity = () => {
   }, []);
 
   return (
-    <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <h5 className="card-title mb-6">Compromisos recientes y vencidos</h5>
-      <div className="flex flex-col mt-2 max-h-80 overflow-y-auto pr-2">
+    <div className="rounded-xl shadow-md bg-white dark:bg-darkgray p-6 w-full">
+      <h5 className="text-lg font-semibold mb-4">Compromisos recientes y vencidos</h5>
+      <div className="flex flex-col mt-2 max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
         <ul>
           {activityData.map((item, index) => (
             <li key={index}>
@@ -72,18 +72,17 @@ const DailyActivity = () => {
                 <div className="flex flex-col items-center">
                   <div className={`rounded-full ${item.color} p-1.5 w-fit`}></div>
                   {index < activityData.length - 1 && (
-                    <div className="h-full w-px bg-border"></div>
+                    <div className="h-full w-px bg-gray-300"></div>
                   )}
                 </div>
                 <div>
-                  <p className="text-dark text-start">{item.action}</p>
+                  <p className="text-gray-800 text-start">{item.action}</p>
                 </div>
               </div>
             </li>
           ))}
         </ul>
       </div>
-
     </div>
   );
 };

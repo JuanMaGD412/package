@@ -9,7 +9,7 @@ const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
   const [institucion, setInstitucion] = useState("");
   const [contacto, setContacto] = useState("");
   const [observaciones, setObservaciones] = useState("");
-  
+  const [opciones, setOpciones] = useState({});
   
   useEffect(() => {
     const rutaAtencionData = {
@@ -24,6 +24,16 @@ const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
     };
     setRuta_Atencion(rutaAtencionData);
   }, [idCaso, rutaAtencion, tipoRemision, fecha, remitido, institucion, contacto, observaciones]); 
+
+  useEffect(() => {
+      const fetchOpciones = async () => {
+        const res = await fetch("../../../../api/listas");
+        const data = await res.json();
+        setOpciones(data);
+      };
+  
+      fetchOpciones();
+    }, []);
 
   return (
     <div className="mb-1 p-4 border rounded-lg shadow-md bg-white w-320 scale-[0.75]  origin-left">
@@ -42,8 +52,10 @@ const RutaAtencionForm = ({setRuta_Atencion, idCaso}) => {
           <label className="block font-medium">Tipo de remisión:</label>
           <select className="border p-2 w-full rounded" value={tipoRemision} onChange={(e) => setTipoRemision(e.target.value)}>
             <option>Seleccione un tipo</option>
-            <option>Urgente</option>
-            <option>Regular</option>
+            {/* Cargar dinámicamente las opciones */}
+            {opciones.tipo_remision && opciones.tipo_remision.map((tipo, index) => (
+              <option key={index} value={tipo}>{tipo}</option>
+            ))}
           </select>
           <label className="block font-medium">Fecha:</label>
           <input type="date" className="border p-2 w-full rounded" value={fecha} onChange={(e) => setFecha(e.target.value)} />

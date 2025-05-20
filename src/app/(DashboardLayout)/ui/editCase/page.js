@@ -5,13 +5,11 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Icon } from "@iconify/react";
 import { fetchCases } from "../../../api/fetchCase/fetchCase";
 import CaseDetailsModal from "./components/caseDetailsModal";
-import SeguimientoModal from "./components/seguimientoModal";
 
 const CasesTable = () => {
   const [cases, setCases] = useState([]);
   const [selectedCase, setSelectedCase] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const casesPerPage = 10;
@@ -31,14 +29,10 @@ const CasesTable = () => {
     setIsModalOpen(true);
   };
 
-  const openSeguimientoModal = (caso) => {
-    setSelectedCase(caso);
-    setIsSeguimientoOpen(true);
-  };
+  
 
   const tableActionData = [
-    { icon: "solar:eye-bold", listtitle: "Ver Detalles", action: openModal },
-    { icon: "solar:pen-new-square-broken", listtitle: "Seguimiento", action: openSeguimientoModal },
+    { icon: "solar:eye-bold", listtitle: "Editar Caso", action: openModal },
   ];
 
   const filteredCases = cases.filter((caso) => {
@@ -148,7 +142,6 @@ const CasesTable = () => {
       </div>
 
       {/* Modal de detalles del caso */}
-      <SeguimientoModal isOpen={isSeguimientoOpen} onClose={() => { setIsSeguimientoOpen(false); fetchData();}} caseData={selectedCase} />
       <CaseDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} caseData={selectedCase} />
     </div>
   );

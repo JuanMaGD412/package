@@ -75,7 +75,7 @@ export default function Reportes() {
   };
 
   return (
-    <div className="rounded-xl shadow-md bg-white pt-2 px-6 pb-6 relative w-full break-words w-[63rem]">
+    <div className="rounded-xl shadow-md bg-white p-6  w-256">
       <div className="w-320 scale-[0.85] origin-top-left">
           <div className="p-3">
           <h1 className="text-2xl font-semibold mb-4">Generar Reportes</h1>
