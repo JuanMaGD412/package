@@ -14,6 +14,8 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
   const [institucion, setInstitucion] = useState("");
   const [contacto, setContacto] = useState("");
   const [observaciones, setObservaciones] = useState("");
+  const [localCaseData, setLocalCaseData] = useState(caseData);
+
 
 
   const downloadEvidence = async (url, fileName) => {
@@ -200,7 +202,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
             <Textarea id="decisionComite" name="decisionComite" value={caseData.intervencion?.decision_comite || ''} required onChange={onChange} />
 
             <Label htmlFor="compromisos" value="Compromisos adquiridos" className="mt-4" />
-            <Textarea id="compromisos" name="compromisos" value={caseData.intervencion?.compromisos || ''} required onChange={onChange} />
+            <Textarea id="compromisos" name="compromisos" value={caseData.intervencion?.compromisos || ''} onChange={onChange} />
 
             <Label htmlFor="fechaCompromiso" value="Fecha límite del compromiso" className="mt-4" />
             <TextInput id="fechaCompromiso" name="fechaCompromiso" value={formatDate(caseData.intervencion?.fecha_compromiso)} type="date" min={todayStr} required onChange={onChange} />

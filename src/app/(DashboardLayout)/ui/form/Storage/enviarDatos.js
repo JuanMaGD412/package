@@ -21,7 +21,7 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
     }
 
     if (
-      !descripcion.version_estudiante_afectado &&
+      !descripcion.version_estudiante_vinculado &&
       !descripcion.version_estudiante_implicado &&
       !descripcion.version_testigos
     ) {
@@ -52,7 +52,7 @@ export const enviarDatos = async (formData, actores, descripcion, evidencias, in
     // ✅ A partir de aquí, continuar con los demás
     const descripcionResponse = await guardarDescripcion(
       idCaso,
-      descripcion.version_estudiante_afectado,
+      descripcion.version_estudiante_vinculado,
       descripcion.version_estudiante_implicado,
       descripcion.version_testigos
     );

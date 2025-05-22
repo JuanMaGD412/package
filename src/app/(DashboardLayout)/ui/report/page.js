@@ -188,7 +188,7 @@ export default function Reportes() {
                       )}
                       </td>
                       <td className="p-2 max-w-[12rem] break-words whitespace-pre-wrap">
-                        {caso.descripcion?.version_estudiante_afectado || "Sin descripción"}
+                        {caso.descripcion?.version_estudiante_vinculado || "Sin descripción"}
                       </td>
 
                       <td className="p-2 capitalize">{caso.estado}</td>

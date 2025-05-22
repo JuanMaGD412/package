@@ -138,7 +138,7 @@ useEffect(() => {
                 onChange={(e) => handleRolChange(e.target.value, index)}
               >
                 <option value="">Seleccione un rol</option>
-                <option value="afectado">Afectado</option>
+                <option value="vinculado">Vinculado</option>
                 <option value="implicado">Implicado</option>
                 <option value="testigo">Testigo</option>
               </Select>

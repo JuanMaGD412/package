@@ -94,7 +94,7 @@ const CasesTable = () => {
                         "Sin actores"
                       )}
                     </Table.Cell>
-                    <Table.Cell>{item.descripcion?.version_estudiante_afectado || "Sin descripción"}</Table.Cell>
+                    <Table.Cell>{item.descripcion?.version_estudiante_vinculado || "Sin descripción"}</Table.Cell>
                     <Table.Cell>
                       <Badge color={item.estado === "cerrado" ? "failure" : item.estado === "en seguimiento" ? "yellow" : "green"}>
                       {item.estado.charAt(0).toUpperCase() + item.estado.slice(1)}

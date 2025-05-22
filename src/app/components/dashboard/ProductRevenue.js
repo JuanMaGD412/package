@@ -7,7 +7,7 @@ import { getStudentInfo } from "../../api/comunidad/filtroDocumento/getStudentIn
 const CaseRanking = () => {
   const [cases, setCases] = useState([]);
   const [ranking, setRanking] = useState([]);
-  const [selectedRole, setSelectedRole] = useState("afectado");
+  const [selectedRole, setSelectedRole] = useState("vinculado");
   const [loading, setLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +73,7 @@ const CaseRanking = () => {
         .sort((a, b) => b.casos - a.casos);
 
       setRanking(sortedRanking);
-      setCurrentPage(1); // Resetear al cambiar de rol
+      setCurrentPage(1);
     };
 
     fetchRanking();
@@ -98,7 +98,7 @@ const CaseRanking = () => {
             onChange={(e) => setSelectedRole(e.target.value)}
             className="w-40"
           >
-            <option value="afectado">Afectados</option>
+            <option value="vinculado">Vinculados</option>
             <option value="implicado">Implicados</option>
           </Select>
         </div>

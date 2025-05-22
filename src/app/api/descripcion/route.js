@@ -3,7 +3,7 @@ import pool from "../../../lib/db";
 
 export async function POST(req) {
   try {
-    const { id_caso, version_estudiante_afectado, version_estudiante_implicado, version_testigos } = await req.json();
+    const { id_caso, version_estudiante_vinculado, version_estudiante_implicado, version_testigos } = await req.json();
 
     if (!id_caso) {
       return NextResponse.json({ error: "ID del caso es obligatorio" }, { status: 400 });
@@ -11,13 +11,13 @@ export async function POST(req) {
 
     const sql = `
       INSERT INTO descripciones 
-      (id_caso, version_estudiante_afectado, version_estudiante_implicado, version_testigos) 
+      (id_caso, version_estudiante_vinculado, version_estudiante_implicado, version_testigos) 
       VALUES ($1, $2, $3, $4)
     `;
 
     const result = await pool.query(sql, [
       id_caso,
-      version_estudiante_afectado || null,
+      version_estudiante_vinculado || null,
       version_estudiante_implicado || null,
       version_testigos || null
     ]);

@@ -1,12 +1,12 @@
 export const guardarDescripcion = async (
     idCaso,
-    version_estudiante_afectado,
+    version_estudiante_vinculado,
     version_estudiante_implicado,
     version_testigos
 ) => {
     try {
         if (!idCaso) throw new Error("ID del caso no proporcionado");
-        if (!version_estudiante_afectado && !version_estudiante_implicado && !version_testigos) {
+        if (!version_estudiante_vinculado && !version_estudiante_implicado && !version_testigos) {
             throw new Error("Debe llenar al menos una versión del relato.");
         }
 
@@ -15,7 +15,7 @@ export const guardarDescripcion = async (
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 id_caso: idCaso, 
-                version_estudiante_afectado: version_estudiante_afectado || null, 
+                version_estudiante_vinculado: version_estudiante_vinculado || null, 
                 version_estudiante_implicado: version_estudiante_implicado || null, 
                 version_testigos: version_testigos || null 
             }),
