@@ -21,7 +21,7 @@ export async function POST(req) {
       [idCaso]
     );
 
-    const nuevaLinea = `[${fecha}] ${estadoNormalizado}: ${observacion}`;
+    const nuevaLinea = `[${fecha}] ${estadoNormalizado}: ${observacion}, seguimiento realizado por: ${responsable}`;
     let resultado;
 
     if (result.rows.length > 0) {

@@ -51,11 +51,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
               </div>
               <div>
                 <Label value="Tipo de Caso" />
-                <Select value={caseData.tipo_caso} disabled>
-                  <option value="">Seleccione un tipo</option>
-                  <option value="salud">Situación de salud</option>
-                  <option value="disciplinario">Disciplinario</option>
-                </Select>
+                <TextInput value={caseData.tipo_caso} readOnly />
               </div>
               <div>
                 <Label value="¿Es confidencial?" />
@@ -138,18 +134,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
             <Separator className="my-4" />
 
             <Label htmlFor="tipoDecision" value="Tipo de decisión tomada" className="font-medium text-gray-600" />
-            <Select
-              id="tipoDecision"
-              value={caseData.intervencion?.tipo_decision || ''}
-              required
-              disabled
-              className="border p-2 rounded-lg w-full mt-1 bg-gray-100"
-            >
-              <option>Seleccione un tipo</option>
-              <option value="Tarea pedagogica">Tarea pedagógica</option>
-              <option value="Suspension">Suspensión</option>
-              <option value="Reparacion">Reparación</option>
-            </Select>
+            <TextInput value={caseData.intervencion?.tipo_decision || ''} readOnly /> 
 
             <Label htmlFor="decisionComite" value="Decisión del comité de convivencia" className="mt-4 font-medium text-gray-600" />
             <Textarea
@@ -190,11 +175,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
             {caseData.rutaAtencion?.ruta_activada === 1 && (
               <div className="mt-6 space-y-4 border-t pt-4">
                 <label className="block font-medium text-gray-600">Tipo de remisión:</label>
-                <select className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.rutaAtencion?.tipo_remision} required disabled>
-                  <option>Seleccione un tipo</option>
-                  <option>Urgente</option>
-                  <option>Regular</option>
-                </select>
+                <TextInput value={caseData.rutaAtencion?.tipo_remision || ''} readOnly />  
 
                 <label className="block font-medium text-gray-600">Fecha:</label>
                 <input type="date" className="border p-2 w-full rounded-lg bg-gray-100" value={new Date(caseData.rutaAtencion?.fecha).toLocaleDateString("en-CA")} required readOnly />
@@ -218,7 +199,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
           <div className="p-6 border rounded-xl shadow-lg bg-white">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow">
                 <div>
-                  <Label htmlFor="responsable" value="Responsable" />
+                  <Label htmlFor="responsable" value="Responsable del último seguimiento" />
                   <input type="text" className="border p-2 w-full rounded-lg bg-gray-100" value={caseData.seguimiento?.responsable} required readOnly/>
                 </div>
                 <div>

@@ -89,7 +89,7 @@ const CaseRanking = () => {
   return (
     <Card className="p-6 mt-4 shadow-md bg-white">
       <div className="mb-4 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-700">Ranking por número de casos</h2>
+        <h2 className="text-xl font-bold text-gray-700">Ranking de recurrencia por rol</h2>
         <div className="flex items-center gap-2">
           <Label htmlFor="rolFilter" value="Filtrar por rol:" />
           <Select
