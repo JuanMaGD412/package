@@ -50,7 +50,7 @@ const SidebarContent: MenuItem[] = [
       },
       {
         name: "Editar caso",
-        icon: "solar:bedside-table-3-linear",
+        icon: "mdi:pencil",
         id: uniqueId(),
         url: "/ui/editCase",
       },

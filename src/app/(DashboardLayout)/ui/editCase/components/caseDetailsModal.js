@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, TextInput, Label, Select, Textarea } from "flowbite-react";
 import { Separator } from "@/components/ui/separator";
+import { actualizarCaso } from "../funciones/actualizarDatos";
+
 
 const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
   if (!caseData) return null;
@@ -11,6 +13,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
   const [tipoRemision, setTipoRemision] = useState([]);
   const [localCaseData, setLocalCaseData] = useState(caseData);
   const todayStr = new Date().toISOString().split("T")[0];
+  
 
   useEffect(() => {
     setLocalCaseData(caseData);
@@ -19,25 +22,16 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
 
   
   useEffect(() => {
-    const fetchTipoDecisiones = async () => {
+    const fetchListas = async () => {
       const res = await fetch("../../../../api/listas");
       const data = await res.json();
       setTipoDecisiones(data.tipo_decision || []);
-    };
-    fetchTipoDecisiones();
-    const fetchTipoCaso= async () => {
-      const res = await fetch("../../../../api/listas");
-      const data = await res.json();
       setTipoCaso(data.tipo_caso || []);
-    };
-    fetchTipoCaso();
-    const fetchTipoRemision= async () => {
-      const res = await fetch("../../../../api/listas");
-      const data = await res.json();
       setTipoRemision(data.tipo_remision || []);
     };
-    fetchTipoRemision();
+    fetchListas();
   }, []);
+  
 
   const downloadEvidence = async (url, fileName) => {
     try {
@@ -88,6 +82,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
     return new Date(dateString).toISOString().split("T")[0];
   };
 
+
   return (
     <Modal show={isOpen} onClose={onClose} size="5xl">
       <Modal.Header className="bg-blue-600 text-white py-4 rounded-t-lg">
@@ -129,8 +124,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
               </div>
               <div>
               <Label value="Tipo de Caso" />
-              <p>Valor actual: {localCaseData.tipo_caso || "(vacío)"}</p>
-              <Select name="intervencion.tipo_caso" value={localCaseData.tipo_caso || ""} onChange={onChange}>
+              <Select name="tipo_caso" value={localCaseData.tipo_caso || ""} onChange={onChange}>
                 <option>Seleccione un tipo</option>
                 {tipoCaso.map((d, idx) => (
                   <option key={idx} value={d}>{d}</option>
@@ -259,7 +253,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
 
             {localCaseData.rutaAtencion?.ruta_activada === 1 && (
               <div className="mt-6 space-y-4 border-t pt-4">
-                <Select name="rutaAntencion.tipo_remision" value={localCaseData.rutaAtencion?.tipo_remision || ""} onChange={onChange}>
+                <Select name="rutaAtencion.tipo_remision" value={localCaseData.rutaAtencion?.tipo_remision || ""} onChange={onChange}>
                 <option>Seleccione un tipo</option>
                 {tipoRemision.map((d, idx) => (
                   <option key={idx} value={d}>{d}</option>
@@ -276,7 +270,7 @@ const CaseDetailsModal = ({ isOpen, onClose, caseData }) => {
         </div>
       </Modal.Body>
       <Modal.Footer className="bg-gray-100 p-4 rounded-b-lg flex justify-end">
-        <Button color="blue" onClick={() => console.log(localCaseData)}>Guardar Cambios</Button>
+        <Button color="blue" onClick={actualizarCaso}>Guardar Cambios</Button>
         <Button color="gray" onClick={onClose}>Cerrar</Button>
       </Modal.Footer>
     </Modal>

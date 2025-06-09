@@ -26,3 +26,31 @@ export async function GET() {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const { id_caso, fecha_caso, tipo_caso, es_confidencial } = await request.json();
+
+    if (!id_caso) {
+      return NextResponse.json({ error: 'Falta el ID del caso' }, { status: 400 });
+    }
+
+    const query = `
+      UPDATE casos
+      SET fecha_caso = $2,
+          tipo_caso = $3,
+          es_confidencial = $4
+      WHERE id_caso = $1
+    `;
+
+    const values = [id_caso, fecha_caso, tipo_caso, es_confidencial];
+
+    await pool.query(query, values);
+
+    return NextResponse.json({ message: 'Caso actualizado exitosamente' }, { status: 200 });
+
+  } catch (error) {
+    console.error('Error al actualizar el caso:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  }
+}

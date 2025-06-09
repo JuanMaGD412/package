@@ -44,3 +44,48 @@ export async function GET() {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const {
+      id_caso,
+      tipoDecision,
+      decisionComite,
+      compromisos,
+      fechaCompromiso
+    } = await request.json();
+
+    if (!id_caso) {
+      return NextResponse.json({ error: "ID del caso es obligatorio" }, { status: 400 });
+    }
+
+    const query = `
+      UPDATE intervenciones
+      SET tipo_decision = $2,
+          decision_comite = $3,
+          compromisos = $4,
+          fecha_compromiso = $5
+      WHERE id_caso = $1
+    `;
+
+    const values = [
+      id_caso,
+      tipoDecision ?? '',
+      decisionComite ?? '',
+      compromisos ?? '',
+      fechaCompromiso ?? null
+    ];
+
+    const result = await pool.query(query, values);
+
+    if (result.rowCount === 0) {
+      return NextResponse.json({ error: "No se encontró intervención para este ID de caso" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Intervención actualizada exitosamente" }, { status: 200 });
+
+  } catch (error) {
+    console.error("Error al actualizar la intervención:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+  }
+}

@@ -56,3 +56,56 @@ export async function GET() {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const {
+      id_caso,
+      documento_id,
+      rol,
+      nombre_completo,
+      tipo_documento,
+      nombre_acudiente,
+      telefono_acudiente,
+      email_acudiente
+    } = await request.json();
+
+    if (!id_caso || !documento_id) {
+      return NextResponse.json({ error: 'Faltan campos clave: id_caso o documento_id' }, { status: 400 });
+    }
+
+    const query = `
+      UPDATE actores
+      SET rol = $3,
+          nombre_completo = $4,
+          tipo_documento = $5,
+          nombre_acudiente = $6,
+          telefono_acudiente = $7,
+          email_acudiente = $8
+      WHERE id_caso = $1 AND documento_id = $2
+    `;
+
+    const values = [
+      id_caso,
+      documento_id,
+      rol,
+      nombre_completo,
+      tipo_documento,
+      nombre_acudiente || null,
+      telefono_acudiente || null,
+      email_acudiente || null
+    ];
+
+    const result = await pool.query(query, values);
+
+    if (result.rowCount === 0) {
+      return NextResponse.json({ error: 'Actor no encontrado' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Actor actualizado exitosamente' }, { status: 200 });
+
+  } catch (error) {
+    console.error('Error al actualizar el actor:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  }
+}

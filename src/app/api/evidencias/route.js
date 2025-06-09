@@ -106,3 +106,31 @@ export async function GET() {
     return NextResponse.json({ error: "Error al obtener evidencias" }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const { id_evidencia, id_caso, tipo_archivo, url_archivo } = await request.json();
+
+    if (!id_evidencia) {
+      return NextResponse.json({ error: 'Falta el ID de la evidencia' }, { status: 400 });
+    }
+
+    const query = `
+      UPDATE evidencias
+      SET id_caso = $2,
+          tipo_archivo = $3,
+          url_archivo = $4
+      WHERE id_evidencia = $1
+    `;
+
+    const values = [id_evidencia, id_caso, tipo_archivo, url_archivo];
+
+    await pool.query(query, values);
+
+    return NextResponse.json({ message: 'Evidencia actualizada exitosamente' }, { status: 200 });
+
+  } catch (error) {
+    console.error('Error al actualizar la evidencia:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  }
+}
