@@ -60,10 +60,16 @@ const SidebarContent: MenuItem[] = [
     heading: "REPORT",
     children: [
       {
-        name: "Generar reportes",
+        name: "Por casos",
         icon: "solar:clipboard-linear",
         id: uniqueId(),
         url: "/ui/report",
+      },
+      {
+        name: "Por estudiante",
+        icon: "solar:clipboard-linear",
+        id: uniqueId(),
+        url: "/ui/reportStudent",
       }
     ],
   },
