@@ -90,6 +90,23 @@ const SidebarContent: MenuItem[] = [
       },
     ],
   },
+  {
+    heading: "UPLOAD",
+    children: [
+      {
+        name: "Comunidad",
+        icon: "solar:clipboard-linear",
+        id: uniqueId(),
+        url: "/uploads/comunidad",
+      },
+      {
+        name: "Casos",
+        icon: "solar:clipboard-linear",
+        id: uniqueId(),
+        url: "/uploads/casos",
+      }
+    ],
+  },
 ];
 
 export default SidebarContent;

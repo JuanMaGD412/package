@@ -1,11 +1,12 @@
-"use client"
+"use client";
 import FullLogo from "@/app/(DashboardLayout)/layout/shared/logo/FullLogo";
 import React from "react";
 import Link from "next/link";
-import AuthLogin from "../authforms/AuthLogin";
+import AuthLogin from "../authforms/AuthLogin"; // <-- tu form funcional
 
 const gradientStyle = {
-  background: "linear-gradient(45deg, rgb(238, 119, 82,0.2), rgb(231, 60, 126,0.2), rgb(35, 166, 213,0.2), rgb(35, 213, 171,0.2))",
+  background:
+    "linear-gradient(45deg, rgb(238, 119, 82,0.2), rgb(231, 60, 126,0.2), rgb(35, 166, 213,0.2), rgb(35, 213, 171,0.2))",
   backgroundSize: "400% 400%",
   animation: "gradient 15s ease infinite",
   height: "100vh",
@@ -20,11 +21,19 @@ const BoxedLogin = () => {
             <div className="mx-auto">
               <FullLogo />
             </div>
-            <p className="text-sm text-center text-dark my-3">Sign In on Libro verde</p>
+            <p className="text-sm text-center text-dark my-3">
+              Sign In on Libro Verde
+            </p>
+
+            {/* Aquí metemos tu AuthLogin con lógica de fetch */}
             <AuthLogin />
+
             <div className="flex gap-2 text-base text-ld font-medium mt-6 items-center justify-center">
               <p>New to Libro verde?</p>
-              <Link href="/auth/register" className="text-primary text-sm font-medium">
+              <Link
+                href="/auth/register"
+                className="text-primary text-sm font-medium"
+              >
                 Create an account
               </Link>
             </div>
