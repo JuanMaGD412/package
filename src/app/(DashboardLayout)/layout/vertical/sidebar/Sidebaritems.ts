@@ -104,6 +104,12 @@ const SidebarContent: MenuItem[] = [
         icon: "solar:clipboard-linear",
         id: uniqueId(),
         url: "/uploads/casos",
+      },
+      {
+        name: "Listas",
+        icon: "solar:clipboard-linear",
+        id: uniqueId(),
+        url: "/uploads/listas",
       }
     ],
   },

@@ -7,43 +7,28 @@ import { useRouter } from "next/navigation";
 
 type RawRow = Record<string, string | undefined>;
 
-type CasoPreview = {
-  id_caso: string;
-  fecha_caso: string;
-  tipo_caso: string;
-  es_confidencial: string | number;
-  estado?: string;
-
-  // Listas de actores (múltiples por rol)
-  implicados?: string;
-  vinculados?: string;
-  testigos?: string;
-
-  // Campos de ruta de atención
-  ruta_activada?: string | number;
-  tipo_remision?: string;
-  fecha_ruta?: string;
-  remitido?: string;
-  institucion?: string;
-  contacto?: string;
-  observaciones?: string;
+type ListaRow = {
+  tipo: string;
+  valor: string;
 };
 
-export default function CasosUploadPage() {
+export default function ListasUploadPage() {
   const router = useRouter();
   const [fileName, setFileName] = useState<string | null>(null);
-  const [rows, setRows] = useState<CasoPreview[]>([]);
+  const [rows, setRows] = useState<ListaRow[]>([]);
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [serverErrors, setServerErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<any | null>(null);
 
-  const expectedCasos = ["id_caso", "fecha_caso", "tipo_caso", "es_confidencial"];
+  const expectedFields = ["tipo", "valor"];
 
+  /** Normaliza encabezados */
   function normalizeKey(k?: string) {
     return (k || "").trim().toLowerCase();
   }
 
+  /** Parse CSV */
   const handleFile = (file: File | null) => {
     setParseErrors([]);
     setServerErrors([]);
@@ -55,11 +40,12 @@ export default function CasosUploadPage() {
     Papa.parse<RawRow>(file, {
       header: true,
       skipEmptyLines: true,
+      encoding: "UTF-8", // 👈 Fuerza lectura UTF-8 (soluciona los signos raros)
       transformHeader: (h) => (h ? h.trim() : h),
       complete: (results: ParseResult<RawRow>) => {
         const data = results.data;
         const localErrors: string[] = [];
-        const cleaned: CasoPreview[] = [];
+        const cleaned: ListaRow[] = [];
 
         data.forEach((r, idx) => {
           const row: Record<string, string | undefined> = {};
@@ -69,31 +55,20 @@ export default function CasosUploadPage() {
           }
 
           const missing: string[] = [];
-          for (const f of expectedCasos) {
+          for (const f of expectedFields) {
             if (!row[f] || String(row[f]).trim() === "") missing.push(f);
           }
 
           if (missing.length > 0) {
-            localErrors.push(`Fila ${idx + 2}: faltan campos: ${missing.join(", ")}`);
+            localErrors.push(
+              `Fila ${idx + 2}: faltan campos: ${missing.join(", ")}`
+            );
             return;
           }
 
           cleaned.push({
-            id_caso: row["id_caso"] as string,
-            fecha_caso: row["fecha_caso"] as string,
-            tipo_caso: row["tipo_caso"] as string,
-            es_confidencial: row["es_confidencial"] as string,
-            estado: (row["estado"] as string) || "abierto",
-            implicados: row["implicados"],
-            vinculados: row["vinculados"],
-            testigos: row["testigos"],
-            ruta_activada: row["ruta_activada"] || "0",
-            tipo_remision: row["tipo_remision"],
-            fecha_ruta: row["fecha_ruta"],
-            remitido: row["remitido"],
-            institucion: row["institucion"],
-            contacto: row["contacto"],
-            observaciones: row["observaciones"],
+            tipo: row["tipo"] as string,
+            valor: row["valor"] as string,
           });
         });
 
@@ -107,11 +82,13 @@ export default function CasosUploadPage() {
     });
   };
 
+  /** Cambio de archivo */
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     handleFile(f);
   };
 
+  /** Subida a la API */
   const handleUpload = async () => {
     setServerErrors([]);
     setUploadResult(null);
@@ -123,21 +100,14 @@ export default function CasosUploadPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/casos/upload", {
+      const res = await fetch("/api/listas/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rows }),
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data?.invalidRows) {
-          setServerErrors([
-            "La API reportó filas inválidas. Revisa el CSV.",
-            JSON.stringify(data.invalidRows).slice(0, 1000),
-          ]);
-        } else {
-          setServerErrors([data?.error || "Error en la API"]);
-        }
+        setServerErrors([data?.error || "Error en la API"]);
       } else {
         setUploadResult(data);
       }
@@ -149,44 +119,64 @@ export default function CasosUploadPage() {
     }
   };
 
+  /** Reset */
+  const resetAll = () => {
+    setRows([]);
+    setFileName(null);
+    setParseErrors([]);
+    setUploadResult(null);
+    setServerErrors([]);
+    const input = document.getElementById("csv-file") as HTMLInputElement;
+    if (input) input.value = "";
+  };
+
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h1 className="text-2xl font-semibold mb-2">
-          Carga masiva de Casos (CSV extendido)
+          Carga masiva de Listas (CSV)
         </h1>
         <p className="text-sm text-gray-500 mb-6">
-          Campos mínimos: <span className="font-medium">id_caso, fecha_caso, tipo_caso, es_confidencial</span>.<br />
-          Los datos de cada actor van separados por <strong>":"</strong> y para hacer una disticnción entre actores usa <strong>";"</strong>.
+          Sube un archivo CSV con los campos:{" "}
+          <span className="font-medium">tipo, valor</span>.
         </p>
 
-        {/* file selector */}
+        {/* Selector de archivo */}
         <div className="mb-6">
           <label
             htmlFor="csv-file"
             className="inline-flex items-center gap-3 px-4 py-2 rounded-md bg-slate-800 text-white cursor-pointer hover:opacity-90 shadow"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V3m0 0l3 3M12 3l-3 3" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V3m0 0l3 3M12 3l-3 3"
+              />
             </svg>
             Seleccionar archivo
           </label>
-          <input id="csv-file" type="file" accept=".csv,text/csv" onChange={onFileChange} className="hidden" />
+          <input
+            id="csv-file"
+            type="file"
+            accept=".csv,text/csv"
+            onChange={onFileChange}
+            className="hidden"
+          />
 
           {fileName ? (
             <span className="ml-4 inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1 rounded">
               <strong className="text-sm">{fileName}</strong>
               <button
                 type="button"
-                onClick={() => {
-                  setFileName(null);
-                  setRows([]);
-                  setParseErrors([]);
-                  setUploadResult(null);
-                  setServerErrors([]);
-                  const input = document.getElementById("csv-file") as HTMLInputElement | null;
-                  if (input) input.value = "";
-                }}
+                onClick={resetAll}
                 className="text-xs text-slate-500 hover:text-red-600"
                 aria-label="Eliminar archivo"
               >
@@ -194,45 +184,44 @@ export default function CasosUploadPage() {
               </button>
             </span>
           ) : (
-            <span className="ml-4 text-sm text-gray-400">No hay archivo seleccionado</span>
+            <span className="ml-4 text-sm text-gray-400">
+              No hay archivo seleccionado
+            </span>
           )}
         </div>
 
-        {/* preview */}
+        {/* Tabla de previsualización */}
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <div className="overflow-auto border rounded-lg max-h-80">
+            <div className="overflow-auto border rounded-lg max-h-72">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">#</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">id_caso</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">fecha</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">tipo</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">conf.</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">implicados</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">vinculados</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">testigos</th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">ruta</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">
+                      #
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">
+                      Tipo
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">
+                      Valor
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.slice(0, 200).map((r, i) => (
                     <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                       <td className="px-3 py-2">{i + 1}</td>
-                      <td className="px-3 py-2">{r.id_caso}</td>
-                      <td className="px-3 py-2">{r.fecha_caso}</td>
-                      <td className="px-3 py-2">{r.tipo_caso}</td>
-                      <td className="px-3 py-2">{String(r.es_confidencial)}</td>
-                      <td className="px-3 py-2">{r.implicados || "-"}</td>
-                      <td className="px-3 py-2">{r.vinculados || "-"}</td>
-                      <td className="px-3 py-2">{r.testigos || "-"}</td>
-                      <td className="px-3 py-2">{r.ruta_activada === "1" ? "Sí" : "No"}</td>
+                      <td className="px-3 py-2">{r.tipo}</td>
+                      <td className="px-3 py-2">{r.valor}</td>
                     </tr>
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td className="p-6 text-center text-sm text-gray-500" colSpan={9}>
+                      <td
+                        className="p-6 text-center text-sm text-gray-500"
+                        colSpan={3}
+                      >
                         No hay filas previsualizadas.
                       </td>
                     </tr>
@@ -242,7 +231,7 @@ export default function CasosUploadPage() {
             </div>
           </div>
 
-          {/* actions + errors */}
+          {/* Panel lateral */}
           <div className="md:col-span-1 space-y-4">
             {parseErrors.length > 0 && (
               <div className="p-3 bg-red-50 border border-red-100 rounded">
@@ -258,23 +247,15 @@ export default function CasosUploadPage() {
             <div className="p-3 bg-gray-50 rounded border">
               <div className="text-xs text-gray-600 mb-2">Acciones</div>
               <div className="flex flex-col gap-2">
-                <Button onClick={handleUpload} disabled={loading || rows.length === 0} className="w-full">
-                  {loading ? "Enviando..." : "Enviar a la base (API)"}
-                </Button>
-
                 <Button
-                  color="gray"
-                  onClick={() => {
-                    setRows([]);
-                    setFileName(null);
-                    setParseErrors([]);
-                    setUploadResult(null);
-                    setServerErrors([]);
-                    const input = document.getElementById("csv-file") as HTMLInputElement | null;
-                    if (input) input.value = "";
-                  }}
+                  onClick={handleUpload}
+                  disabled={loading || rows.length === 0}
                   className="w-full"
                 >
+                  {loading ? "Cargando..." : "Subir a Supabase"}
+                </Button>
+
+                <Button color="gray" onClick={resetAll} className="w-full">
                   Limpiar
                 </Button>
               </div>
@@ -283,13 +264,15 @@ export default function CasosUploadPage() {
             <div className="p-3 bg-emerald-50 rounded border border-emerald-100 text-emerald-700 text-sm">
               <strong>Consejo:</strong>
               <div className="text-xs">
-                Usa el formato <code>1001:Juan Pérez;1002:María Ruiz</code> en las columnas de actores.
+                Asegúrate de que los tipos sean consistentes, por ejemplo:{" "}
+                <code>tipo_caso</code>, <code>tipo_decision</code>,{" "}
+                <code>tipo_remision</code>.
               </div>
             </div>
           </div>
         </div>
 
-        {/* server errors + result */}
+        {/* Errores del servidor / Resultado */}
         <div className="mt-6 space-y-3">
           {serverErrors.length > 0 && (
             <div className="p-3 bg-red-50 text-red-800 rounded border border-red-100">
