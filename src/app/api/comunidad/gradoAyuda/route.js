@@ -1,13 +1,36 @@
 import { NextResponse } from "next/server";
-import pool from "../../../../lib/db";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function GET() {
   try {
-    const result = await pool.query("SELECT DISTINCT grado FROM comunidad WHERE grado IS NOT NULL");
-    const grados = result.rows.map(row => row.grado);
-    return NextResponse.json(grados, { status: 200 });
+    // Seleccionar los grados distintos que no sean nulos
+    const { data, error } = await supabase
+      .from("comunidad")
+      .select("grado")
+      .not("grado", "is", null);
+
+    if (error) {
+      console.error("Error al obtener grados:", error);
+      return NextResponse.json(
+        { error: "Error al obtener los grados" },
+        { status: 500 }
+      );
+    }
+
+    // Eliminar duplicados usando un Set
+    const gradosUnicos = [...new Set(data.map((row) => row.grado))];
+
+    return NextResponse.json(gradosUnicos, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener grados:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    console.error("Excepción al obtener grados:", error);
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }

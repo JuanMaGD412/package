@@ -1,62 +1,70 @@
+// src/app/api/actores/route.js
 import { NextResponse } from "next/server";
-import pool from "../../../lib/db";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+// === POST: insertar varios actores de un caso ===
 export async function POST(req) {
   try {
     const { id_caso, actores } = await req.json();
 
-    if (!id_caso) throw new Error("ID del caso no proporcionado");
-    if (!actores.length) throw new Error("No hay actores para guardar");
+    if (!id_caso) {
+      return NextResponse.json({ error: "ID del caso no proporcionado" }, { status: 400 });
+    }
 
-    const values = [];
-    const placeholders = [];
+    if (!Array.isArray(actores) || actores.length === 0) {
+      return NextResponse.json({ error: "No hay actores para guardar" }, { status: 400 });
+    }
 
-    actores.forEach((actor, index) => {
-      const offset = index * 8;
-      placeholders.push(`($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8})`);
-
-      values.push(
-        id_caso,
-        actor.rol,
-        actor.nombre_completo,
-        actor.tipo_documento,
-        actor.documento_id,
-        actor.nombre_acudiente || null,
-        actor.telefono_acudiente || null,
-        actor.email_acudiente || null
+    const { error } = await supabase
+      .from("actores")
+      .insert(
+        actores.map((actor) => ({
+          id_caso,
+          rol: actor.rol,
+          nombre_completo: actor.nombre_completo,
+          tipo_documento: actor.tipo_documento,
+          documento_id: actor.documento_id,
+          nombre_acudiente: actor.nombre_acudiente || null,
+          telefono_acudiente: actor.telefono_acudiente || null,
+          email_acudiente: actor.email_acudiente || null,
+        }))
       );
-    });
 
-    const sql = `
-      INSERT INTO actores 
-      (id_caso, rol, nombre_completo, tipo_documento, documento_id, 
-       nombre_acudiente, telefono_acudiente, email_acudiente) 
-      VALUES ${placeholders.join(", ")}
-    `;
+    if (error) {
+      console.error("Error al guardar actores:", error);
+      return NextResponse.json({ error: "Error al guardar actores" }, { status: 500 });
+    }
 
-    const result = await pool.query(sql, values);
-
-    return NextResponse.json({ 
-      message: "Actores guardados exitosamente", 
-      rowCount: result.rowCount 
-    }, { status: 201 });
-
+    return NextResponse.json({ message: "Actores guardados exitosamente" }, { status: 201 });
   } catch (error) {
-    console.error("Error al guardar actores:", error);
+    console.error("Excepción en POST actores:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
+// === GET: obtener todos los actores ===
 export async function GET() {
   try {
-    const result = await pool.query("SELECT * FROM actores");
-    return NextResponse.json(result.rows, { status: 200 });
+    const { data, error } = await supabase.from("actores").select("*");
+
+    if (error) {
+      console.error("Error al obtener actores:", error);
+      return NextResponse.json({ error: "Error al obtener los actores" }, { status: 500 });
+    }
+
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener los actores:", error);
+    console.error("Excepción en GET actores:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
+// === PUT: actualizar un actor específico ===
 export async function PUT(request) {
   try {
     const {
@@ -67,45 +75,42 @@ export async function PUT(request) {
       tipo_documento,
       nombre_acudiente,
       telefono_acudiente,
-      email_acudiente
+      email_acudiente,
     } = await request.json();
 
     if (!id_caso || !documento_id) {
-      return NextResponse.json({ error: 'Faltan campos clave: id_caso o documento_id' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Faltan campos clave: id_caso o documento_id" },
+        { status: 400 }
+      );
     }
 
-    const query = `
-      UPDATE actores
-      SET rol = $3,
-          nombre_completo = $4,
-          tipo_documento = $5,
-          nombre_acudiente = $6,
-          telefono_acudiente = $7,
-          email_acudiente = $8
-      WHERE id_caso = $1 AND documento_id = $2
-    `;
+    const { error, data } = await supabase
+      .from("actores")
+      .update({
+        rol,
+        nombre_completo,
+        tipo_documento,
+        nombre_acudiente: nombre_acudiente || null,
+        telefono_acudiente: telefono_acudiente || null,
+        email_acudiente: email_acudiente || null,
+      })
+      .eq("id_caso", id_caso)
+      .eq("documento_id", documento_id)
+      .select(); // devuelve filas afectadas
 
-    const values = [
-      id_caso,
-      documento_id,
-      rol,
-      nombre_completo,
-      tipo_documento,
-      nombre_acudiente || null,
-      telefono_acudiente || null,
-      email_acudiente || null
-    ];
-
-    const result = await pool.query(query, values);
-
-    if (result.rowCount === 0) {
-      return NextResponse.json({ error: 'Actor no encontrado' }, { status: 404 });
+    if (error) {
+      console.error("Error al actualizar actor:", error);
+      return NextResponse.json({ error: "Error al actualizar actor" }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Actor actualizado exitosamente' }, { status: 200 });
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: "Actor no encontrado" }, { status: 404 });
+    }
 
+    return NextResponse.json({ message: "Actor actualizado exitosamente" }, { status: 200 });
   } catch (error) {
-    console.error('Error al actualizar el actor:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    console.error("Excepción en PUT actores:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

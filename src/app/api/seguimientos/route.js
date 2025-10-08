@@ -1,5 +1,11 @@
+// src/app/api/seguimientos/route.js
 import { NextResponse } from "next/server";
-import pool from "../../../lib/db";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function POST(req) {
   try {
@@ -9,62 +15,108 @@ export async function POST(req) {
       return NextResponse.json({ error: "Faltan datos obligatorios" }, { status: 400 });
     }
 
-    const estadoNormalizado = estadoAvance.toLowerCase();
+    const estadoNormalizado = (estadoAvance || "").toLowerCase();
     const estadosValidos = ["abierto", "en seguimiento", "cerrado"];
 
     if (!estadosValidos.includes(estadoNormalizado)) {
       return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
     }
 
-    const result = await pool.query(
-      "SELECT observacion FROM seguimientos WHERE id_caso = $1 LIMIT 1",
-      [idCaso]
-    );
+    // 1️⃣ Buscar si ya existe seguimiento para el caso
+    const { data: existente, error: errorSelect } = await supabase
+      .from("seguimientos")
+      .select("observacion")
+      .eq("id_caso", idCaso)
+      .limit(1)
+      .single();
+
+    if (errorSelect && errorSelect.code !== "PGRST116") {
+      console.error("Error al buscar seguimiento:", errorSelect);
+      return NextResponse.json({ error: "Error al consultar seguimiento" }, { status: 500 });
+    }
 
     const nuevaLinea = `[${fecha}] ${estadoNormalizado}: ${observacion}, seguimiento realizado por: ${responsable}`;
     let resultado;
 
-    if (result.rows.length > 0) {
-      const observacionAnterior = result.rows[0].observacion || "";
+    // 2️⃣ Si existe → actualizar concatenando observación
+    if (existente) {
+      const observacionAnterior = existente.observacion || "";
       const observacionFinal = observacionAnterior
         ? `${observacionAnterior}\n${nuevaLinea}`
         : nuevaLinea;
 
-      const updateSql = `
-        UPDATE seguimientos
-        SET responsable = $1, fecha = $2, observacion = $3
-        WHERE id_caso = $4
-      `;
-      await pool.query(updateSql, [responsable, fecha, observacionFinal, idCaso]);
+      const { error: errorUpdate } = await supabase
+        .from("seguimientos")
+        .update({
+          responsable,
+          fecha,
+          observacion: observacionFinal,
+        })
+        .eq("id_caso", idCaso);
+
+      if (errorUpdate) {
+        console.error("Error al actualizar seguimiento:", errorUpdate);
+        return NextResponse.json({ error: "Error al actualizar seguimiento" }, { status: 500 });
+      }
+
       resultado = "actualizado";
     } else {
-      const insertSql = `
-        INSERT INTO seguimientos (id_caso, responsable, fecha, observacion)
-        VALUES ($1, $2, $3, $4)
-      `;
-      await pool.query(insertSql, [idCaso, responsable, fecha, nuevaLinea]);
+      // 3️⃣ Si no existe → insertar nuevo
+      const { error: errorInsert } = await supabase
+        .from("seguimientos")
+        .insert([
+          {
+            id_caso: idCaso,
+            responsable,
+            fecha,
+            observacion: nuevaLinea,
+          },
+        ]);
+
+      if (errorInsert) {
+        console.error("Error al insertar seguimiento:", errorInsert);
+        return NextResponse.json({ error: "Error al insertar seguimiento" }, { status: 500 });
+      }
+
       resultado = "insertado";
     }
 
-    const updateEstadoSql = "UPDATE casos SET estado = $1 WHERE Id_Caso = $2";
-    await pool.query(updateEstadoSql, [estadoNormalizado, idCaso]);
+    // 4️⃣ Actualizar el estado del caso en la tabla casos
+    const { error: errorEstado } = await supabase
+      .from("casos")
+      .update({ estado: estadoNormalizado })
+      .eq("id_caso", idCaso);
 
-    return NextResponse.json({
-      message: `Seguimiento ${resultado} correctamente`,
-    }, { status: 200 });
+    if (errorEstado) {
+      console.error("Error al actualizar estado del caso:", errorEstado);
+      return NextResponse.json({ error: "Error al actualizar estado del caso" }, { status: 500 });
+    }
+
+    // 5️⃣ Respuesta final
+    return NextResponse.json(
+      { message: `Seguimiento ${resultado} correctamente` },
+      { status: 200 }
+    );
 
   } catch (error) {
-    console.error("Error al guardar el seguimiento:", error);
+    console.error("Excepción en POST seguimiento:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
+// === GET: obtener todos los seguimientos ===
 export async function GET() {
   try {
-    const result = await pool.query("SELECT * FROM seguimientos");
-    return NextResponse.json(result.rows, { status: 200 });
+    const { data, error } = await supabase.from("seguimientos").select("*");
+
+    if (error) {
+      console.error("Error al obtener seguimientos:", error);
+      return NextResponse.json({ error: "Error al obtener los seguimientos" }, { status: 500 });
+    }
+
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener los casos:", error);
+    console.error("Excepción en GET seguimientos:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

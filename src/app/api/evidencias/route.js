@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
-import pool from "../../../lib/db";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+// 📌 POST: subir evidencias al Storage y guardar en la tabla
 export async function POST(req) {
   try {
     const formData = await req.formData();
     const id_caso = formData.get("id_caso");
+
+    if (!id_caso) {
+      return NextResponse.json({ error: "ID del caso es obligatorio" }, { status: 400 });
+    }
 
     const evidencias = [];
     let index = 0;
@@ -25,6 +34,7 @@ export async function POST(req) {
         tipoArchivo = file.type;
 
         const storagePath = `caso-${id_caso}/${Date.now()}-${nombreArchivo}`;
+
         const { data, error } = await supabase.storage
           .from("evidencias")
           .upload(storagePath, file, {
@@ -32,53 +42,43 @@ export async function POST(req) {
           });
 
         if (error) throw error;
-        rutaArchivo = data.path; // Guarda esta ruta en la base de datos
+        rutaArchivo = data.path;
       }
 
-      evidencias.push([
+      evidencias.push({
         id_caso,
-        description,
-        nombreArchivo,
-        tipoArchivo,
-        size,
-        rutaArchivo,
-      ]);
+        descripcion: description,
+        nombre_archivo: nombreArchivo,
+        tipo_archivo: tipoArchivo,
+        tamano_archivo: size,
+        ruta_archivo: rutaArchivo,
+      });
 
       index++;
     }
 
-    if (evidencias.length > 0) {
-      const values = [];
-      const placeholders = evidencias.map((_, i) => {
-        const offset = i * 6;
-        values.push(...evidencias[i]);
-        return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6})`;
-      });
-
-      const sql = `
-        INSERT INTO evidencias 
-        (id_caso, descripcion, nombre_archivo, tipo_archivo, tamano_archivo, ruta_archivo)
-        VALUES ${placeholders.join(", ")}
-      `;
-
-      await pool.query(sql, values);
-
-      return NextResponse.json({ message: "Evidencias subidas a Storage y guardadas" }, { status: 201 });
+    if (evidencias.length === 0) {
+      return NextResponse.json({ message: "No hay evidencias para guardar" }, { status: 200 });
     }
 
-    return NextResponse.json({ message: "No hay evidencias para guardar" }, { status: 200 });
+    const { error } = await supabase.from("evidencias").insert(evidencias);
+    if (error) throw error;
+
+    return NextResponse.json({ message: "Evidencias subidas a Storage y guardadas" }, { status: 201 });
   } catch (error) {
     console.error("Error al subir evidencias:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
+// 📌 GET: obtener todas las evidencias con URLs firmadas
 export async function GET() {
   try {
-    const { rows } = await pool.query("SELECT * FROM evidencias");
+    const { data: evidencias, error } = await supabase.from("evidencias").select("*");
+    if (error) throw error;
 
-    const evidencias = await Promise.all(
-      rows.map(async (e) => {
+    const signedEvidencias = await Promise.all(
+      evidencias.map(async (e) => {
         let url = null;
 
         if (e.ruta_archivo) {
@@ -86,51 +86,52 @@ export async function GET() {
             .from("evidencias")
             .createSignedUrl(e.ruta_archivo, 3600); // 1 hora
 
-          if (data?.signedUrl) {
-            url = data.signedUrl;
-          } else {
+          if (error) {
             console.error("Error al generar URL firmada:", error);
+          } else {
+            url = data?.signedUrl;
           }
         }
 
-        return {
-          ...e,
-          url_archivo: url,
-        };
+        return { ...e, url_archivo: url };
       })
     );
 
-    return NextResponse.json(evidencias, { status: 200 });
+    return NextResponse.json(signedEvidencias, { status: 200 });
   } catch (error) {
     console.error("Error al obtener evidencias:", error);
     return NextResponse.json({ error: "Error al obtener evidencias" }, { status: 500 });
   }
 }
 
+// 📌 PUT: actualizar evidencia por id_evidencia
 export async function PUT(request) {
   try {
     const { id_evidencia, id_caso, tipo_archivo, url_archivo } = await request.json();
 
     if (!id_evidencia) {
-      return NextResponse.json({ error: 'Falta el ID de la evidencia' }, { status: 400 });
+      return NextResponse.json({ error: "Falta el ID de la evidencia" }, { status: 400 });
     }
 
-    const query = `
-      UPDATE evidencias
-      SET id_caso = $2,
-          tipo_archivo = $3,
-          url_archivo = $4
-      WHERE id_evidencia = $1
-    `;
+    const { error, count } = await supabase
+      .from("evidencias")
+      .update({
+        id_caso,
+        tipo_archivo,
+        url_archivo,
+      })
+      .eq("id_evidencia", id_evidencia)
+      .select("*", { count: "exact" });
 
-    const values = [id_evidencia, id_caso, tipo_archivo, url_archivo];
+    if (error) throw error;
 
-    await pool.query(query, values);
+    if (count === 0) {
+      return NextResponse.json({ error: "Evidencia no encontrada" }, { status: 404 });
+    }
 
-    return NextResponse.json({ message: 'Evidencia actualizada exitosamente' }, { status: 200 });
-
+    return NextResponse.json({ message: "Evidencia actualizada exitosamente" }, { status: 200 });
   } catch (error) {
-    console.error('Error al actualizar la evidencia:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    console.error("Error al actualizar la evidencia:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

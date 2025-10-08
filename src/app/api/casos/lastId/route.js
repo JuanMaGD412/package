@@ -1,13 +1,36 @@
 import { NextResponse } from "next/server";
-import pool from "../../../../lib/db";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function GET() {
   try {
-    const result = await pool.query("SELECT id_caso FROM casos ORDER BY id DESC LIMIT 1");
-    const lastId = result.rows.length > 0 ? result.rows[0].id_caso : null;
-    return NextResponse.json({ lastId });
+    // Obtener el último caso según el ID
+    const { data, error } = await supabase
+      .from("casos")
+      .select("id_caso")
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error al obtener el último Id_Caso:", error);
+      return NextResponse.json(
+        { error: "Error al obtener el último Id_Caso" },
+        { status: 500 }
+      );
+    }
+
+    const lastId = data ? data.id_caso : null;
+    return NextResponse.json({ lastId }, { status: 200 });
   } catch (error) {
-    console.error("Error al obtener el último Id_Caso:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    console.error("Excepción al obtener el último Id_Caso:", error);
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }
