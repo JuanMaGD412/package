@@ -2,20 +2,23 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { supabase } from "@/lib/supabaseClient";
 
+
 export async function GET(req, { params }) {
   const documento = params.documento;
 
   try {
     // 1. Trae los datos del estudiante
+// 1. Trae los datos del estudiante
     const estudianteRes = await pool.query(
       `SELECT 
         documentoid, nombre, apellido1, apellido2, grado, 
         nombreacudiente, apellido1acudiente, apellido2acudiente,
-        telefonoacudiente, ruta_foto
+        telefonoacudiente, emailacudiente, ruta_foto
       FROM comunidad
       WHERE documentoid = $1`,
       [documento]
     );
+
 
     if (estudianteRes.rows.length === 0) {
       return NextResponse.json({ error: "Estudiante no encontrado" }, { status: 404 });
@@ -31,9 +34,11 @@ export async function GET(req, { params }) {
       acudiente: {
         nombre_completo: `${est.nombreacudiente || ""} ${est.apellido1acudiente || ""} ${est.apellido2acudiente || ""}`.trim(),
         telefono: est.telefonoacudiente || "",
+        emailacudiente: est.emailacudiente || "",
       },
       foto_url: null
     };
+
 
     // 3. Obtener URL pública de Supabase
     if (est.ruta_foto) {

@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { exportToPDF } from "./funciones/exportToPDF";
+import EnviarReporteModal from "../../ui/editCase/components/EnviarReporteModal";
 
 export default function ReporteEstudiante() {
   const [casos, setCasos] = useState([]);
@@ -14,7 +15,12 @@ export default function ReporteEstudiante() {
   const [documento, setDocumento] = useState("");
   const [filtroAplicado, setFiltroAplicado] = useState(false);
   const [estudiante, setEstudiante] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+   const handleEnviarReporte = () => {
+    setIsModalOpen(true);
+  };
+  
   const handleFiltrar = async () => {
     if (!documento) return;
 
@@ -156,16 +162,35 @@ export default function ReporteEstudiante() {
               </tbody>
             </table>
 
+          <div className="flex gap-4 mt-4">
             <button
               onClick={() => exportToPDF(estudiante, filtered)}
-              className="mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-full"
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-full"
             >
               Exportar PDF
             </button>
+
+            <button
+              onClick={handleEnviarReporte}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-full"
+            >
+              Enviar Reporte
+            </button>
+          </div>
           </>
         ) : filtroAplicado ? (
           <p className="text-gray-500 mt-4">No se encontraron resultados.</p>
         ) : null}
+
+        {/* Modal de Envío */}
+        {estudiante && (
+          <EnviarReporteModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            estudiante={estudiante}
+            casos={filtered}
+          />
+        )}
       </div>
     </div>
   );
